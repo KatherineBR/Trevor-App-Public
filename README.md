@@ -1,6 +1,6 @@
-# trevor_app
+# trevor-app
 
-A new Flutter project.
+A new Flutter project created by T4SG S25 for The Trevor Project.
 
 ## Getting Started
 
