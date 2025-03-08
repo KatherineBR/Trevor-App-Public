@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,6 +14,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      // loads localized resources 
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      // lists the languages that the app supports
+      supportedLocales: [
+        Locale('en', 'US'), // English
+        Locale('es', 'MX'), // Spanish
+      ],
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -69,6 +83,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // retrieves the appropriate translations based on the user's
+    // language settings from the generated class "AppLocalizations"
+    final localizations = AppLocalizations.of(context)!;
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -83,7 +100,9 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        // uses the content from the translation that it retrieved from the 
+        // the generated class
+        title: Text(localizations.appTitle),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -103,20 +122,29 @@ class _MyHomePageState extends State<MyHomePage> {
           // action in the IDE, or press "p" in the console), to see the
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+          children: [
+            // buttons for call, text, and chat
+            // uses the retrieved translation from the generated class
+            // which stores the appropriate translations based on the user's language
+            // setting
+            ElevatedButton(
+              onPressed: () {}, 
+              child: Text(localizations.call),
             ),
+            SizedBox(height: 15),
+            ElevatedButton(
+              onPressed: () {},
+              child: Text(localizations.text),
+            ),
+            SizedBox(height: 15),
+            ElevatedButton(
+              onPressed: () {}, 
+              child: Text(localizations.chat),
+            ),
+            SizedBox(height: 15),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
