@@ -53,18 +53,12 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-
   Future<void> sendSMS(String phoneNumber) async {
     final Uri smsUri = Uri.parse('sms:$phoneNumber'); // `sms:` opens the messaging app
     if (await canLaunchUrl(smsUri)) {
       await launchUrl(smsUri);
     } else {
-      print('Could not launch SMS app');
+      debugPrint('Could not launch SMS app');
     }
   }
 
