@@ -122,7 +122,7 @@ class MyHomePage extends StatelessWidget {
                   ),
                 );
               },
-            child: const Text(localizations.chat)
+            child: Text(localizations.chat)
             ), 
             SizedBox(height: 15),
           ],
