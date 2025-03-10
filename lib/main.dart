@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,6 +15,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      // loads localized resources 
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      // lists the languages that the app supports
+      supportedLocales: [
+        Locale('en', 'US'), // English
+        Locale('es', 'MX'), // Spanish
+      ],
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -31,31 +45,19 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final int _counter = 0;
 
   Future<void> sendSMS(String phoneNumber) async {
     final Uri smsUri = Uri.parse('sms:$phoneNumber'); // `sms:` opens the messaging app
@@ -68,6 +70,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // retrieves the appropriate translations based on the user's
+    // language settings from the generated class "AppLocalizations"
+    final localizations = AppLocalizations.of(context)!;
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -82,7 +87,9 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        // uses the content from the translation that it retrieved from the 
+        // the generated class
+        title: Text(localizations.appTitle),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -103,9 +110,13 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: [ ElevatedButton(
+            // uses the retrieved translation from the generated class which 
+            // stores the appropriate translations based on the user's language
+            // setting
             onPressed: () => sendSMS('sms:+18664887386'), // Replace with desired number
-            child: Text('Send SMS'),
+            child: Text(localizations.text),
           ),
+          SizedBox(height: 15),
           ],
         ),
       ),
