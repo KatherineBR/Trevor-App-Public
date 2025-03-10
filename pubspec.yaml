@@ -35,6 +35,11 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   webview_flutter: ^4.10.0
+  url_launcher: ^6.3.1
+  # added the necessary localization packages
+  flutter_localizations:
+    sdk: flutter
+  intl: any
 
 dev_dependencies:
   flutter_test:
@@ -57,6 +62,9 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  # needed in order to tell flutter to generate localization files based 
+  # on ARB resources
+  generate: true
 
   # To add assets to your application, add an assets section, like this:
   # assets:

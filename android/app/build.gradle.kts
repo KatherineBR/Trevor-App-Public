@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.example.trevor_app"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973"
+    ndkVersion = "27.0.12077973" // Hard-coded this line to ensure compatability with url launcher + webchat packages
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
