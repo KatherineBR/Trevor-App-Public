@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -51,6 +52,22 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+
+  Future<void> sendSMS(String phoneNumber) async {
+    final Uri smsUri = Uri.parse('sms:$phoneNumber'); // `sms:` opens the messaging app
+    if (await canLaunchUrl(smsUri)) {
+      await launchUrl(smsUri);
+    } else {
+      print('Could not launch SMS app');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // retrieves the appropriate translations based on the user's
@@ -92,29 +109,17 @@ class MyHomePage extends StatelessWidget {
           // action in the IDE, or press "p" in the console), to see the
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // buttons for call, text, and chat
-            // uses the retrieved translation from the generated class
-            // which stores the appropriate translations based on the user's language
+          children: [ ElevatedButton(
+            // uses the retrieved translation from the generated class which 
+            // stores the appropriate translations based on the user's language
             // setting
-            ElevatedButton(
-              onPressed: () {}, 
-              child: Text(localizations.call),
-            ),
-            SizedBox(height: 15),
-            ElevatedButton(
-              onPressed: () {},
-              child: Text(localizations.text),
-            ),
-            SizedBox(height: 15),
-            ElevatedButton(
-              onPressed: () {}, 
-              child: Text(localizations.chat),
-            ),
-            SizedBox(height: 15),
+            onPressed: () => sendSMS('sms:+18664887386'), // Replace with desired number
+            child: Text(localizations.text),
+          ),
+          SizedBox(height: 15),
           ],
         ),
       ),
     );
-  }
 }
+  }
