@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'webview_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -104,13 +105,26 @@ class MyHomePage extends StatelessWidget {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: [ ElevatedButton(
-            // uses the retrieved translation from the generated class which 
-            // stores the appropriate translations based on the user's language
-            // setting
-            onPressed: () => sendSMS('sms:+18664887386'), // Replace with desired number
-            child: Text(localizations.text),
-          ),
-          SizedBox(height: 15),
+              // uses the retrieved translation from the generated class which 
+              // stores the appropriate translations based on the user's language
+              // setting
+              onPressed: () => sendSMS('sms:+18664887386'), // Replace with desired number
+              child: Text(localizations.text),
+            ),
+            SizedBox(height: 15),
+            ElevatedButton(
+            onPressed: () {
+              // Navigate to the webview chat when pressed
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => WebViewApp(), 
+                  ),
+                );
+              },
+            child: const Text(localizations.chat)
+            ), 
+            SizedBox(height: 15),
           ],
         ),
       ),
