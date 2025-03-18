@@ -3,5 +3,8 @@
   "call": "Llamar",
   "text": "Mensaje",
   "chat": "Chat",
-  "chatURL": "http://chat.trvr.mx/"
+  "chatURL": "http://chat.trvr.mx/",
+  "home" : "Hogar",
+  "meditation" : "Meditación",
+  "feedback" : "Comentario"
 }
