@@ -97,8 +97,8 @@ class _HomeScreenState extends State<HomeScreen> {
             label: localizations.home,
           ),
           NavigationDestination(
-            icon: Icon(Icons.self_improvement), // Meditation icon
-            label: localizations.meditation,
+            icon: Icon(Icons.library_books), // Resources icon
+            label: localizations.resources,
           ),
           NavigationDestination(
             icon: Icon(Icons.feedback), // Feedback icon
