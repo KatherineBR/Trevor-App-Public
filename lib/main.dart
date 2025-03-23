@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      // loads localized resources 
+      // loads localized resources
       localizationsDelegates: [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -63,6 +63,18 @@ class MyHomePage extends StatelessWidget {
     }
   }
 
+  Future<void> openCallApp(String phoneNumber) async {
+    final Uri telUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    if (await canLaunchUrl(telUri)) {
+      await launchUrl(telUri);
+    } else {
+      debugPrint('Could not launch Phone app');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // retrieves the appropriate translations based on the user's
@@ -82,7 +94,7 @@ class MyHomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        // uses the content from the translation that it retrieved from the 
+        // uses the content from the translation that it retrieved from the
         // the generated class
         title: Text(localizations.appTitle),
       ),
@@ -105,7 +117,7 @@ class MyHomePage extends StatelessWidget {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: [ ElevatedButton(
-              // uses the retrieved translation from the generated class which 
+              // uses the retrieved translation from the generated class which
               // stores the appropriate translations based on the user's language
               // setting
               onPressed: () => sendSMS('sms:+18664887386'), // Replace with desired number
@@ -118,13 +130,18 @@ class MyHomePage extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => WebViewApp(), 
+                  builder: (context) => WebViewApp(),
                   ),
                 );
               },
             child: Text(localizations.chat)
-            ), 
+            ),
             SizedBox(height: 15),
+            ElevatedButton(
+              child: Text(localizations.call),
+              onPressed: () => openCallApp('+18664887386'),
+            )
+
           ],
         ),
       ),
