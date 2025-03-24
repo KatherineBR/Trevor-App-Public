@@ -3,6 +3,7 @@ import 'webview_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'resources.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      // loads localized resources 
+      // loads localized resources
       localizationsDelegates: [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(),
+      home: ResourcesPage(),
     );
   }
 }
@@ -55,7 +56,9 @@ class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
   Future<void> sendSMS(String phoneNumber) async {
-    final Uri smsUri = Uri.parse('sms:$phoneNumber'); // `sms:` opens the messaging app
+    final Uri smsUri = Uri.parse(
+      'sms:$phoneNumber',
+    ); // `sms:` opens the messaging app
     if (await canLaunchUrl(smsUri)) {
       await launchUrl(smsUri);
     } else {
@@ -82,7 +85,7 @@ class MyHomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        // uses the content from the translation that it retrieved from the 
+        // uses the content from the translation that it retrieved from the
         // the generated class
         title: Text(localizations.appTitle),
       ),
@@ -104,30 +107,32 @@ class MyHomePage extends StatelessWidget {
           // action in the IDE, or press "p" in the console), to see the
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [ ElevatedButton(
-              // uses the retrieved translation from the generated class which 
+          children: [
+            ElevatedButton(
+              // uses the retrieved translation from the generated class which
               // stores the appropriate translations based on the user's language
               // setting
-              onPressed: () => sendSMS('sms:+18664887386'), // Replace with desired number
+              onPressed:
+                  () => sendSMS(
+                    'sms:+18664887386',
+                  ), // Replace with desired number
               child: Text(localizations.text),
             ),
             SizedBox(height: 15),
             ElevatedButton(
-            onPressed: () {
-              // Navigate to the webview chat when pressed
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => WebViewApp(), 
-                  ),
+              onPressed: () {
+                // Navigate to the webview chat when pressed
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => WebViewApp()),
                 );
               },
-            child: Text(localizations.chat)
-            ), 
+              child: Text(localizations.chat),
+            ),
             SizedBox(height: 15),
           ],
         ),
       ),
     );
-}
   }
+}
