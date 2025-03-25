@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter_localizations/flutter_localizations.dart';
-// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 const List<Widget> feedbackTypes = <Widget>[
@@ -39,7 +39,16 @@ class _MyWidgetState extends State<FeedbackApp> {
     } else {
       // App form is active
       final formState = _appFormKey.currentState;
+      // if appFormquestinon2 is not answered it will be 0 so invalidate
       if (formState != null) {
+        var rating = formState._selectedRating.where((isSelected) => isSelected).length;
+        if (rating == 0) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Please give us a rating'))
+          );
+          return;
+        }
+
         final Map<String, dynamic> formData = {
           'appFormQuestion1': formState.appFormQuestion1.text,
           'appFormQuestion2': formState._selectedRating.where((isSelected) => isSelected).length,
@@ -57,10 +66,11 @@ class _MyWidgetState extends State<FeedbackApp> {
   @override
   Widget build(BuildContext context) {
   final ThemeData theme = Theme.of(context);
+  final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Feedback'),
+        title: Text(localizations.feedback),
       ),
       body: Center(
         child: Column(
@@ -147,13 +157,13 @@ class _CommunicationFeedbackFormState extends State<CommunicationFeedbackForm> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-
+    final localizations = AppLocalizations.of(context)!;
     return Column(
       children: [
         TextFormField(
           controller: communicationsFormQuestion1,
           decoration: InputDecoration(
-            labelText: 'How are you feeling?'
+            labelText: localizations.communicationsFormQuestion1,
           ),
           keyboardType: TextInputType.text,
         ),
@@ -163,7 +173,7 @@ class _CommunicationFeedbackFormState extends State<CommunicationFeedbackForm> {
         TextFormField(
           controller: communicationsFormQuestion2,
           decoration: InputDecoration(
-            labelText: 'Is there anything you would like to share?'
+            labelText: localizations.communicationsFormQuestion2,
           ),
           validator: (value) {
             return null;
@@ -172,7 +182,7 @@ class _CommunicationFeedbackFormState extends State<CommunicationFeedbackForm> {
         SizedBox(
           height: MediaQuery.of(context).size.width * 0.1,
         ),
-        Text('From 1-10 how would you rate your counselor?', style: theme.textTheme.titleSmall),
+        Text(localizations.communicationsFormQuestion3, style: theme.textTheme.titleSmall),
         // const SizedBox(height: 5)
         ToggleButtons(
           onPressed: (int index) {
@@ -223,25 +233,26 @@ class _AppFeedbackFormState extends State<AppFeedbackForm> {
 
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context)!;
     final ThemeData theme = Theme.of(context);
     return Column(
       children: [
         TextFormField(
           controller: appFormQuestion1,
           decoration: InputDecoration(
-            labelText: "How are you enjoying this app?",
+            labelText: local.appFormQuestion1,
           ),
           keyboardType: TextInputType.text,
         ),
         SizedBox(
           height: MediaQuery.of(context).size.width * 0.1,
         ),
-        Text('Rate us 1-5 stars', style: theme.textTheme.titleSmall),
+        Text(local.appFormQuestion2, style: theme.textTheme.titleSmall),
         const SizedBox(height: 5),
         ToggleButtons(
           onPressed: (int index) {
             setState(() {
-              // The button that is tapped is set to true, and the others to false.
+              // The buttons that are <= than the one that is tapped is set to true,
               for (int i = 0; i < _selectedRating.length; i++) {
                 _selectedRating[i] = i <= index;
               }
