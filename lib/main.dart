@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'webview_controller.dart';
+import 'feedback.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +18,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      // loads localized resources 
+      // removes the little debug banner I found it a little annoying
+      debugShowCheckedModeBanner: false,
+      // loads localized resources
       localizationsDelegates: [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -82,7 +86,7 @@ class MyHomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        // uses the content from the translation that it retrieved from the 
+        // uses the content from the translation that it retrieved from the
         // the generated class
         title: Text(localizations.appTitle),
       ),
@@ -105,7 +109,7 @@ class MyHomePage extends StatelessWidget {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: [ ElevatedButton(
-              // uses the retrieved translation from the generated class which 
+              // uses the retrieved translation from the generated class which
               // stores the appropriate translations based on the user's language
               // setting
               onPressed: () => sendSMS('sms:+18664887386'), // Replace with desired number
@@ -118,13 +122,25 @@ class MyHomePage extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => WebViewApp(), 
+                  builder: (context) => WebViewApp(),
                   ),
                 );
               },
             child: Text(localizations.chat)
-            ), 
+            ),
             SizedBox(height: 15),
+            ElevatedButton(
+              onPressed: () {
+                // Navigate to the feedback form when pressed
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FeedbackApp(),
+                  ),
+                );
+              },
+              child: Text(localizations.feedback),
+            ),
           ],
         ),
       ),
