@@ -3,5 +3,8 @@
   "call": "Call",
   "text": "Text",
   "chat": "Chat",
-  "chatURL": "http://chat.trvr.org/"
+  "chatURL": "http://chat.trvr.org/",
+  "home" : "Home",
+  "resources" : "Resources",
+  "feedback" : "Feedback"
 }
