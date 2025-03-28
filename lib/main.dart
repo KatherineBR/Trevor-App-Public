@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _pages = [
     MyHomePage(),        // Home page from home.dart
     ResourcesPage(),  // Meditation page from resources.dart
-    MyFeedbackPage(),    // Feedback page from feedback.dart
+    FeedbackApp(),    // Feedback page from feedback.dart
   ];
 
   // This function is called when a bottom nav item is selected
@@ -81,17 +81,6 @@ class _HomeScreenState extends State<HomeScreen> {
     final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        // uses the content from the translation that it retrieved from the 
-        // the generated class
-        title: Text(localizations.appTitle),
-      ),
       body: IndexedStack(
         index: _selectedIndex, // Show the page based on the selected index
         children: _pages, // The list of pages

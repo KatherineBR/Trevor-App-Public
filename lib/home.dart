@@ -34,13 +34,7 @@ class MyHomePage extends StatelessWidget {
     final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        // uses the content from the translation that it retrieved from the 
-        // the generated class
-      ),
+      appBar: AppBar(title: Text('Home')),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 40),
         child: Column(
@@ -83,9 +77,16 @@ class MyHomePage extends StatelessWidget {
             ), ),
             SizedBox(height: 25),
             Expanded(child: ElevatedButton(
-              child: Text(localizations.call),
               onPressed: () => openCallApp('+18664887386'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(double.infinity, 60), // Ensures full width
+                textStyle: TextStyle(fontSize: 60), // Increases font size
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12), // Makes it rounded rectangle
+              ), ),
+              child: Text(localizations.call),
             ), ), 
+            SizedBox(height: 25),
           ],
         ),
       ),
