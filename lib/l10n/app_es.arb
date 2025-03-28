@@ -5,4 +5,7 @@
   "chat": "Chat",
   "chatURL": "http://chat.trvr.mx/",
   "feedback" : "Retroalimentación"
+  "home" : "Hogar",
+  "resources" : "Recursos",
+  "feedback" : "Comentario"
 }
