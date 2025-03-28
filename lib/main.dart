@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'webview_controller.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'resources.dart';
+import 'home.dart';        // Import home.dart
+import 'feedback.dart';   // Import feedback.dart
+import 'resources.dart'; // Import resources.dart
 
 void main() {
   runApp(const MyApp());
@@ -15,9 +15,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    
     return MaterialApp(
-      title: 'Flutter Demo',
-      // loads localized resources
+      // loads localized resources 
       localizationsDelegates: [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -47,36 +47,39 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: ResourcesPage(),
+      home: const HomeScreen(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
-  Future<void> sendSMS(String phoneNumber) async {
-    final Uri smsUri = Uri.parse(
-      'sms:$phoneNumber',
-    ); // `sms:` opens the messaging app
-    if (await canLaunchUrl(smsUri)) {
-      await launchUrl(smsUri);
-    } else {
-      debugPrint('Could not launch SMS app');
-    }
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0; // Track the selected tab
+
+  // List of pages to display based on the selected index
+  final List<Widget> _pages = [
+    MyHomePage(),        // Home page from home.dart
+    ResourcesPage(),  // Meditation page from resources.dart
+    MyFeedbackPage(),    // Feedback page from feedback.dart
+  ];
+
+  // This function is called when a bottom nav item is selected
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index; // Set the selected index
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // retrieves the appropriate translations based on the user's
-    // language settings from the generated class "AppLocalizations"
     final localizations = AppLocalizations.of(context)!;
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+
     return Scaffold(
       appBar: AppBar(
         // TRY THIS: Try changing the color here to a specific color (to
@@ -85,53 +88,31 @@ class MyHomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        // uses the content from the translation that it retrieved from the
+        // uses the content from the translation that it retrieved from the 
         // the generated class
         title: Text(localizations.appTitle),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              // uses the retrieved translation from the generated class which
-              // stores the appropriate translations based on the user's language
-              // setting
-              onPressed:
-                  () => sendSMS(
-                    'sms:+18664887386',
-                  ), // Replace with desired number
-              child: Text(localizations.text),
-            ),
-            SizedBox(height: 15),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to the webview chat when pressed
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => WebViewApp()),
-                );
-              },
-              child: Text(localizations.chat),
-            ),
-            SizedBox(height: 15),
-          ],
-        ),
+      body: IndexedStack(
+        index: _selectedIndex, // Show the page based on the selected index
+        children: _pages, // The list of pages
+      ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: _onItemTapped, // Handle selection of nav items
+        destinations: [
+          NavigationDestination(
+            icon: Icon(Icons.home), 
+            label: localizations.home,
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.library_books), // Resources icon
+            label: localizations.resources,
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.feedback), // Feedback icon
+            label: localizations.feedback,
+          ),
+        ],
       ),
     );
   }
