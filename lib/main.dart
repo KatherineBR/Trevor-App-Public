@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'webview_controller.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'home.dart';        // Import home.dart
@@ -67,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // List of pages to display based on the selected index
   final List<Widget> _pages = [
     MyHomePage(),        // Home page from home.dart
-    MyResourcesPage(),  // Meditation page from resources.dart
+    ResourcesPage(),  // Meditation page from resources.dart
     MyFeedbackPage(),    // Feedback page from feedback.dart
   ];
 
@@ -83,7 +81,17 @@ class _HomeScreenState extends State<HomeScreen> {
     final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
-      
+      appBar: AppBar(
+        // TRY THIS: Try changing the color here to a specific color (to
+        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
+        // change color while the other colors stay the same.
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        // uses the content from the translation that it retrieved from the 
+        // the generated class
+        title: Text(localizations.appTitle),
+      ),
       body: IndexedStack(
         index: _selectedIndex, // Show the page based on the selected index
         children: _pages, // The list of pages
