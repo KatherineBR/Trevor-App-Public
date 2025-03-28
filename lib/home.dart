@@ -15,6 +15,18 @@ class MyHomePage extends StatelessWidget {
     }
   }
 
+  Future<void> openCallApp(String phoneNumber) async {
+    final Uri telUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    if (await canLaunchUrl(telUri)) {
+      await launchUrl(telUri);
+    } else {
+      debugPrint('Could not launch Phone app');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // retrieves the appropriate translations based on the user's
@@ -71,25 +83,9 @@ class MyHomePage extends StatelessWidget {
             ), ),
             SizedBox(height: 25),
             Expanded(child: ElevatedButton(
-            onPressed: () {
-              // Copied the webview button as a dummy so we can format with three buttons
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => WebViewApp(), 
-                  ),
-                );
-              },
-            style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity, 60), // Ensures full width
-                textStyle: TextStyle(fontSize: 60), // Increases font size
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12), // Makes it rounded rectangle
-              ), ),
-            child: Text(localizations.chat)
-            ),),
-            
-            SizedBox(height: 40),
+              child: Text(localizations.call),
+              onPressed: () => openCallApp('+18664887386'),
+            ), ), 
           ],
         ),
       ),
