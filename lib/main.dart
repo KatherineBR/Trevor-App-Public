@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';       // Import home.dart
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'home.dart';        // Import home.dart
 import 'feedback.dart';   // Import feedback.dart
+import 'resources.dart'; // Import resources.dart
 
 void main() {
   runApp(const MyApp());
@@ -62,7 +64,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // List of pages to display based on the selected index
   final List<Widget> _pages = [
-    FeedbackApp(),    // Feedback page from feedback.dart
+    MyHomePage(),        // Home page from home.dart
+    ResourcesPage(),  // Meditation page from resources.dart
+    MyFeedbackPage(),    // Feedback page from feedback.dart
   ];
 
   // This function is called when a bottom nav item is selected
