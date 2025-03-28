@@ -4,6 +4,12 @@
   "text": "Text",
   "chat": "Chat",
   "chatURL": "http://chat.trvr.org/",
+  "feedback" : "Feedback",
+  "appFormQuestion1" : "How are you enjoying this app?",
+  "appFormQuestion2" : "Rate us 1-5 stars",
+  "communicationsFormQuestion1" : "How are you feeling?",
+  "communicationsFormQuestion2" : "Is there anything you would like to share?",
+  "communicationsFormQuestion3" : "From 1-10 how would you rate your counselor?",
   "home" : "Home",
   "resources" : "Resources",
   "feedback" : "Feedback"
