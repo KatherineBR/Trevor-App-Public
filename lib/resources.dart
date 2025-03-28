@@ -9,11 +9,11 @@ class ResourceCard extends StatelessWidget {
 
   // constructor for the resource card requiring the previously defined properties
   const ResourceCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.description,
     required this.url,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
