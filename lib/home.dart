@@ -63,7 +63,7 @@ class MyHomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => WebViewApp(), 
+                    builder: (context) => WebViewApp(url: 'https://chat.trvr.org/'),
                     ),
                   );
                 },

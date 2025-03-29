@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewApp extends StatefulWidget {
-  const WebViewApp({super.key});
+  final String url; // Accepts a URL as a parameter
+
+  const WebViewApp({super.key, required this.url});
 
   @override
   State<WebViewApp> createState() => _WebViewAppState();
@@ -15,10 +17,7 @@ class _WebViewAppState extends State<WebViewApp> {
   void initState() {
     super.initState();
     controller = WebViewController()
-      // Enable JavaScript:
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-
-      // (Optional) set up a navigation delegate to catch errors or logs:
       ..setNavigationDelegate(
         NavigationDelegate(
           onWebResourceError: (WebResourceError error) {
@@ -26,11 +25,7 @@ class _WebViewAppState extends State<WebViewApp> {
           },
         ),
       )
-
-      // Then, load request
-      ..loadRequest(
-        Uri.parse('https://chat.trvr.org/'),
-      );
+      ..loadRequest(Uri.parse(widget.url)); // Use the passed URL
   }
 
   @override
