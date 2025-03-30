@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 const List<Widget> feedbackTypes = <Widget>[
@@ -21,7 +22,7 @@ class _MyWidgetState extends State<FeedbackApp> {
   final _communicationFormKey = GlobalKey<_CommunicationFeedbackFormState>();
   final _appFormKey = GlobalKey<_AppFeedbackFormState>();
 
-  void _submit() {
+  void _submit() async {
     if (_selectedFeedbackType[0]) {
       // Communication form is active
       final formState = _communicationFormKey.currentState;
@@ -30,10 +31,27 @@ class _MyWidgetState extends State<FeedbackApp> {
         final Map<String, dynamic> formData = {
           'communicationsFormQuestion1': formState.communicationsFormQuestion1.text,
           'communicationsFormQuestion2': formState.communicationsFormQuestion2.text,
-          'communicationsFormQuestion3': formState._selectedRating.where((isSelected) => isSelected).length,
+          'Rating': formState._selectedRating.where((isSelected) => isSelected).length,
+          // Could add timestamp
         };
 
         // print('Communication Form Data: $formData');
+        // Attempt to store data in firestore
+        try {
+          await FirebaseFirestore.instance
+            .collection('conversationFeedback')
+            .add(formData);
+
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Feedback submitted. Thank you!'))
+          );
+        } catch (error) {
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error submitting feedback: $error'))
+          );
+        } 
       }
     } else {
       // App form is active
@@ -54,12 +72,23 @@ class _MyWidgetState extends State<FeedbackApp> {
         };
 
         // print('App Form Data: $formData');
+        // Send data to firestore
+        try {
+          await FirebaseFirestore.instance
+            .collection('appFeedback')
+            .add(formData);
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Feedback submitted. Thank you!'))
+    );
+        } catch (error) {
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error submitting feedback: $error'))
+          );
+        } 
       }
     }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Feedback submitted. Thank you!'))
-    );
   }
 
   @override
