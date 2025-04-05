@@ -9,6 +9,7 @@
   "appFormQuestion2" : "Rate us 1-5 stars",
   "communicationsFormQuestion1" : "Did you find this conversation helpful?",
   "communicationsFormQuestion2" : "After this conversation, how do you feel?",
+  "communicationsFormDescription" : "Thanks for reaching out and talking to one of our counselors today. Please take this brief survey to tell us about your experience. Your responses will remain confidential, and we’ll use this information to improve the quality of our service.",
   "home" : "Home",
   "resources" : "Resources",
   "feedback" : "Feedback",

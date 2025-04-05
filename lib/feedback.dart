@@ -193,6 +193,9 @@ class _CommunicationFeedbackFormState extends State<CommunicationFeedbackForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
 
+        Text(localizations.communicationsFormDescription, style: theme.textTheme.titleLarge),
+        const SizedBox(height: 20),
+
         // --- Question 1: Yes / No ---
         Text(localizations.communicationsFormQuestion1, style: theme.textTheme.titleMedium),
         const SizedBox(height: 8),
