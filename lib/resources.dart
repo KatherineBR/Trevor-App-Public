@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'webview_controller.dart';
 
 //defines a custom stateless widget for resourcecard
 class ResourceCard extends StatelessWidget {
@@ -29,6 +31,12 @@ class ResourceCard extends StatelessWidget {
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         subtitle: Text(description),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => WebViewApp(url: url)), // Replace with your destination
+          );
+        }
       ),
     );
   }
