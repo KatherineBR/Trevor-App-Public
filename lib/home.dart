@@ -24,12 +24,17 @@ class _MyHomePageState extends State<MyHomePage>{
     'MX': 'http://chat.trvr.mx/',
   };
 
+  // initstate method called when state object is inserted into the widget 
+  // tree for the first time, allowing initialization of country code before
+  // the widget is built.
   @override
   void initState() {
     super.initState();
     _initializeCountryCode();
   }
 
+  // tries to get the device's countrycode by calling on the getUserCountry
+  // function in the Location service file
   Future<void> _initializeCountryCode() async {
     try {
       final code = await LocationService.getUserCountry();
@@ -39,6 +44,7 @@ class _MyHomePageState extends State<MyHomePage>{
         _loading = false;
       });
     }
+    // if there is an error, the default countrycode is US
     catch (error) {
       debugPrint("Location error: $error. Defaulting to US.");
       setState(() {

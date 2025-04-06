@@ -43,6 +43,8 @@ class ResourceCard extends StatelessWidget {
   }
 }
 
+// a map of maps containing all the urls of used in the resources card 
+// differentiated by the countrycodes
 class ResourcesUrl {
   static final Map<String, Map<String, String>> urls = {
     'US': {
@@ -78,7 +80,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
   bool _loading = true;
 
   final List<Map<String, String>> resources = [
-    // list of sample data for the resource card
+    // list of sample data for the resource card 
     {
       'title': 'Resources',
       'description': 'A collection of helpful resources.',
@@ -97,14 +99,20 @@ class _ResourcesPageState extends State<ResourcesPage> {
     },
   ];
 
+  // initstate method called when state object is inserted into the widget 
+  // tree for the first time, allowing initialization of country code before
+  // the widget is built.
   @override
   void initState() {
     super.initState();
+    // fetches the user's countrycode/location
     _initializeCountryCode();
   }
 
 
   Future<void> _initializeCountryCode() async {
+    // tries to get the device's countrycode by calling on the getUserCountry
+    // function in the Location service file
     try {
       final code = await LocationService.getUserCountry();
       debugPrint("Success! Country Code: $code");
@@ -113,6 +121,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
         _loading = false;
       });
     }
+    // if there is an error, uses US as the default countryCode. 
     catch (error) {
       debugPrint("Location error: $error. Defaulting to US.");
       setState(() {
@@ -128,7 +137,6 @@ class _ResourcesPageState extends State<ResourcesPage> {
     return Scaffold(
       appBar: AppBar(title: Text('Resources')),
       // body of the page contains listview for multiple resourcecard widgets to be displayed
-      // body of the page contains listview for multiple resourcecard widgets to be displayed
    body: _loading
         ? const Center(child: CircularProgressIndicator())
         : ListView.builder(
@@ -138,6 +146,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
             final resource = resources[index];
             final title = resource['title']!;
             final description = resource['description']!;
+            // calls for the getUrl function in the new ResourcesUrl class
             final url = ResourcesUrl.getUrl(title, _countryCode);
             return ResourceCard(
               title: title,
