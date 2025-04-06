@@ -4,8 +4,49 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'locationservice.dart';
 
-class MyHomePage extends StatelessWidget {
+// changed this class to include states
+class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
+  
+  // creates the state for the page page
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage>{
+  // the two elements in this state
+  String _countryCode = 'US'; // default country code is set to US
+  bool _loading = true;
+  
+  // map that holds the two different urls with the country codes as the keys
+  Map<String, String> chatUrl = {
+    'US': 'http://chat.trvr.org/',
+    'MX': 'http://chat.trvr.mx/',
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeCountryCode();
+  }
+
+  Future<void> _initializeCountryCode() async {
+    try {
+      final code = await LocationService.getUserCountry();
+      debugPrint("Success! Country Code: $code");
+      setState(() {
+        _countryCode = code;
+        _loading = false;
+      });
+    }
+    catch (error) {
+      debugPrint("Location error: $error. Defaulting to US.");
+      setState(() {
+        _countryCode = 'US';
+        _loading = false;
+      });
+    }
+  }
 
   Future<void> sendSMS(String phoneNumber) async {
     final Uri smsUri = Uri.parse('sms:$phoneNumber'); // `sms:` opens the messaging app
@@ -64,7 +105,7 @@ class MyHomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => WebViewApp(url: 'https://chat.trvr.org/'),
+                    builder: (context) => WebViewApp(url: chatUrl[_countryCode] ?? chatUrl['US']!),
                     ),
                   );
                 },
