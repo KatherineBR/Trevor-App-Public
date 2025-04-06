@@ -109,7 +109,6 @@ class _ResourcesPageState extends State<ResourcesPage> {
     _initializeCountryCode();
   }
 
-
   Future<void> _initializeCountryCode() async {
     // tries to get the device's countrycode by calling on the getUserCountry
     // function in the Location service file
@@ -131,11 +130,10 @@ class _ResourcesPageState extends State<ResourcesPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Resources')),
+      appBar: AppBar(title: const Text('Resources')),
       // body of the page contains listview for multiple resourcecard widgets to be displayed
    body: _loading
         ? const Center(child: CircularProgressIndicator())
