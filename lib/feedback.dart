@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 const List<Widget> feedbackTypes = <Widget>[
@@ -21,19 +22,37 @@ class _MyWidgetState extends State<FeedbackApp> {
   final _communicationFormKey = GlobalKey<_CommunicationFeedbackFormState>();
   final _appFormKey = GlobalKey<_AppFeedbackFormState>();
 
-  void _submit() {
+  void _submit() async {
+    final localizations = AppLocalizations.of(context)!;
     if (_selectedFeedbackType[0]) {
       // Communication form is active
       final formState = _communicationFormKey.currentState;
       if (formState != null) {
         // Get all form data
         final Map<String, dynamic> formData = {
-          'communicationsFormQuestion1': formState.communicationsFormQuestion1.text,
-          'communicationsFormQuestion2': formState.communicationsFormQuestion2.text,
-          'communicationsFormQuestion3': formState._selectedRating.where((isSelected) => isSelected).length,
+          'question1_yesNo': formState.yesNoAnswer == true ? localizations.yes : localizations.no,
+          'question2_comparison': formState.comparison,
+          'question2_rating': formState.rating,
+          // Could add timestamp
         };
 
         // print('Communication Form Data: $formData');
+        // Attempt to store data in firestore
+        try {
+          await FirebaseFirestore.instance
+            .collection('conversationFeedback')
+            .add(formData);
+
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Feedback submitted. Thank you!'))
+          );
+        } catch (error) {
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error submitting feedback: $error'))
+          );
+        } 
       }
     } else {
       // App form is active
@@ -54,12 +73,23 @@ class _MyWidgetState extends State<FeedbackApp> {
         };
 
         // print('App Form Data: $formData');
+        // Send data to firestore
+        try {
+          await FirebaseFirestore.instance
+            .collection('appFeedback')
+            .add(formData);
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Feedback submitted. Thank you!'))
+    );
+        } catch (error) {
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error submitting feedback: $error'))
+          );
+        } 
       }
     }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Feedback submitted. Thank you!'))
-    );
   }
 
   @override
@@ -140,6 +170,7 @@ const List<Widget> ratingsCommunication = <Widget>[
   Text('9'),
   Text('10'),
 ];
+
 class CommunicationFeedbackForm extends StatefulWidget {
   const CommunicationFeedbackForm({super.key});
 
@@ -147,68 +178,139 @@ class CommunicationFeedbackForm extends StatefulWidget {
   State<CommunicationFeedbackForm> createState() => _CommunicationFeedbackFormState();
 }
 
-
 class _CommunicationFeedbackFormState extends State<CommunicationFeedbackForm> {
-  final List<bool> _selectedRating = List.generate(10, (_) => false);
-  final communicationsFormQuestion1 = TextEditingController();
-  final communicationsFormQuestion2 = TextEditingController();
+  bool? _answeredYes;
+  String? _comparisonResponse;
+  int? _ratingResponse;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final localizations = AppLocalizations.of(context)!;
+    final List<String> comparisonOptions = [localizations.better, localizations.same, localizations.worse];
+
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextFormField(
-          controller: communicationsFormQuestion1,
-          decoration: InputDecoration(
-            labelText: localizations.communicationsFormQuestion1,
-          ),
-          keyboardType: TextInputType.text,
+
+        Text(localizations.communicationsFormDescription, style: theme.textTheme.titleLarge),
+        const SizedBox(height: 20),
+
+        // --- Question 1: Yes / No ---
+        Text(localizations.communicationsFormQuestion1, style: theme.textTheme.titleMedium),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _answeredYes == true ? Colors.green : null,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _answeredYes = true;
+                  });
+                },
+                child: const Text('Yes'),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _answeredYes == false ? Colors.red : null,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _answeredYes = false;
+                  });
+                },
+                child: const Text('No'),
+              ),
+            ),
+          ],
         ),
-        SizedBox(
-          height: MediaQuery.of(context).size.width * 0.1,
+
+        const SizedBox(height: 30),
+
+        // --- Question 2 Part 1: Better / Same / Worse ---
+        Text(localizations.communicationsFormQuestion2, style: theme.textTheme.titleMedium),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: comparisonOptions.map((option) {
+            final isSelected = _comparisonResponse == option;
+            return Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isSelected ? Colors.blueAccent : null,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _comparisonResponse = option;
+                    });
+                  },
+                  child: Text(option),
+                ),
+              ),
+            );
+          }).toList(),
         ),
-        TextFormField(
-          controller: communicationsFormQuestion2,
-          decoration: InputDecoration(
-            labelText: localizations.communicationsFormQuestion2,
-          ),
-          validator: (value) {
-            return null;
-          },
+
+        const SizedBox(height: 30),
+
+        // --- Question 2 Part 2: Rating 0 to 10 ---
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(11, (index) {
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  _ratingResponse = index;
+                });
+              },
+              child: Container(
+                width: 28,
+                height: 40,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: _ratingResponse == index ? Colors.orange : Colors.grey[300],
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(index.toString()),
+              ),
+            );
+          }),
         ),
-        SizedBox(
-          height: MediaQuery.of(context).size.width * 0.1,
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(localizations.bad, style: TextStyle(fontSize: 12)),
+            Text(localizations.good, style: TextStyle(fontSize: 12)),
+          ],
         ),
-        Text(localizations.communicationsFormQuestion3, style: theme.textTheme.titleSmall),
-        // const SizedBox(height: 5)
-        ToggleButtons(
-          onPressed: (int index) {
-            setState(() {
-              // The button that is tapped is set to true, and the others to false.
-              for (int i = 0; i < _selectedRating.length; i++) {
-                _selectedRating[i] = i <= index;
-              }
-            });
-          },
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
-          selectedBorderColor: Colors.red[700],
-          selectedColor: Colors.white,
-          fillColor: Colors.red[200],
-          color: Colors.red[400],
-          constraints: const BoxConstraints(
-            minHeight: 60.0,
-            minWidth: 40.0),
-          isSelected: _selectedRating,
-          children: ratingsCommunication,
-        ),
-        SizedBox(
-          height: MediaQuery.of(context).size.width * 0.1,
-        ),
+
+        const SizedBox(height: 30),
       ],
     );
   }
+
+  // Expose values for the parent widget
+  bool? get yesNoAnswer => _answeredYes;
+  String? get comparison => _comparisonResponse;
+  int? get rating => _ratingResponse;
+}
+
+
+class AppFeedbackForm extends StatefulWidget {
+  const AppFeedbackForm({super.key});
+
+  @override
+  State<AppFeedbackForm> createState() => _AppFeedbackFormState();
 }
 
 const List<Widget> ratingsApp = <Widget>[
@@ -218,13 +320,6 @@ const List<Widget> ratingsApp = <Widget>[
   Text('4'),
   Text('5'),
 ];
-
-class AppFeedbackForm extends StatefulWidget {
-  const AppFeedbackForm({super.key});
-
-  @override
-  State<AppFeedbackForm> createState() => _AppFeedbackFormState();
-}
 
 class _AppFeedbackFormState extends State<AppFeedbackForm> {
   final List<bool> _selectedRating = List.generate(5, (_) => false);
