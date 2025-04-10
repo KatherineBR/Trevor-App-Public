@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'webview_controller.dart';
+import 'locationservice.dart';
 
 //defines a custom stateless widget for resourcecard
 class ResourceCard extends StatelessWidget {
@@ -42,49 +43,116 @@ class ResourceCard extends StatelessWidget {
   }
 }
 
-// stateless widget for the entire list of resource cards
-class ResourcesPage extends StatelessWidget {
+// a map of maps containing all the urls of used in the resources card 
+// differentiated by the countrycodes
+class ResourcesUrl {
+  static final Map<String, Map<String, String>> urls = {
+    'US': {
+      'Resources': 'https://www.thetrevorproject.org/resources/',
+      'Research Briefs': 'https://www.thetrevorproject.org/research-briefs/',
+      'Breathing Exercises': 'https://www.thetrevorproject.org/breathing-exercise/',
+      'Blogs': 'https://www.thetrevorproject.org/blog/',
+    },
+    'MX': {
+      'Resources': 'https://www.thetrevorproject.mx/recursos/',
+      'Research Briefs': 'https://www.thetrevorproject.org/research-briefs/',
+      'Breathing Exercises': 'https://www.thetrevorproject.org/breathing-exercise/',
+      'Blogs': 'https://www.thetrevorproject.org/blog/',
+    },
+  };
+  static getUrl(title, countryCode) {
+    //fetches the url for the given title under the countrycode
+    // the "!" operator asserts that the values are not null
+    return urls[countryCode]![title]!;
+  }
+}
+
+// a class that contains a state
+class ResourcesPage extends StatefulWidget {
+  const ResourcesPage({super.key});
+
+  @override
+  State<ResourcesPage> createState() => _ResourcesPageState();
+}
+
+class _ResourcesPageState extends State<ResourcesPage> {
+  String _countryCode = 'US';
+  bool _loading = true;
+
   final List<Map<String, String>> resources = [
-    // list of sample data for the resource card
+    // list of sample data for the resource card 
     {
       'title': 'Resources',
       'description': 'A collection of helpful resources.',
-      'url': 'https://www.thetrevorproject.org/resources/',
     },
     {
       'title': 'Research Briefs',
       'description': 'Explore the latest research studies.',
-      'url': 'https://www.thetrevorproject.org/research-briefs/',
     },
     {
       'title': 'Breathing Exercises',
       'description': 'Learn to manage stress with breathing techniques.',
-      'url': 'https://www.thetrevorproject.org/breathing-exercise/',
     },
     {
       'title': 'Blogs',
       'description': 'Read inspiring stories and updates.',
-      'url': 'https://www.thetrevorproject.org/blog/',
     },
   ];
+
+  // initstate method called when state object is inserted into the widget 
+  // tree for the first time, allowing initialization of country code before
+  // the widget is built.
+  @override
+  void initState() {
+    super.initState();
+    // fetches the user's countrycode/location
+    _initializeCountryCode();
+  }
+
+  Future<void> _initializeCountryCode() async {
+    // tries to get the device's countrycode by calling on the getUserCountry
+    // function in the Location service file
+    try {
+      final code = await LocationService.getUserCountry();
+      debugPrint("Success! Country Code: $code");
+      setState(() {
+        _countryCode = code;
+        _loading = false;
+      });
+    }
+    // if there is an error, uses US as the default countryCode. 
+    catch (error) {
+      debugPrint("Location error: $error. Defaulting to US.");
+      setState(() {
+        _countryCode = 'US';
+        _loading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Resources')),
+      appBar: AppBar(title: const Text('Resources')),
       // body of the page contains listview for multiple resourcecard widgets to be displayed
-      body: ListView.builder(
-        itemCount: resources.length,
-        itemBuilder: (context, index) {
-          // creates a resourcecard for each item in the list
-          final resource = resources[index];
-          return ResourceCard(
-            title: resource['title']!,
-            description: resource['description']!,
-            url: resource['url']!,
-          );
-        },
-      ),
+   body: _loading
+        ? const Center(child: CircularProgressIndicator())
+        : ListView.builder(
+          itemCount: resources.length,
+          itemBuilder: (context, index) {
+            // creates a resourcecard for each item in the list
+            final resource = resources[index];
+            final title = resource['title']!;
+            final description = resource['description']!;
+            // calls for the getUrl function in the new ResourcesUrl class
+            final url = ResourcesUrl.getUrl(title, _countryCode);
+            return ResourceCard(
+              title: title,
+              description: description,
+              url: url,
+            );
+          },
+        ),
     );
   }
 }
