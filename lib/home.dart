@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'webview_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'theme.dart';
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
@@ -27,69 +28,91 @@ class MyHomePage extends StatelessWidget {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    // retrieves the appropriate translations based on the user's
-    // language settings from the generated class "AppLocalizations"
-    final localizations = AppLocalizations.of(context)!;
+  Future<void> openWhatsApp(String phoneNumber) async {
+    final whatsappUri = Uri.parse("https://wa.me/$phoneNumber");
+    if (await canLaunchUrl(whatsappUri)) {
+      await launchUrl(whatsappUri);
+    } else {
+      debugPrint('Could not launch WhatsApp. Make sure WhatsApp is installed.');
+    }
+  }
+    @override
+      Widget build(BuildContext context) {
+        final localizations = AppLocalizations.of(context)!;
+        final theme = Theme.of(context);
+        final homeButtonsStyle = AppTheme.largeButtonStyle;
+        const tempCondition = false; // Placeholder for actual condition for later
 
     return Scaffold(
-      appBar: AppBar(title: Text('Home')),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 40),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [ 
-            SizedBox(height: 40), // Adds top margin
-            Expanded(
-              child: ElevatedButton(
-              // uses the retrieved translation from the generated class which 
-              // stores the appropriate translations based on the user's language
-              // setting
-              onPressed: () => sendSMS('sms:+18664887386'), // Replace with desired number
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity, 60), // Ensures full width
-                textStyle: TextStyle(fontSize: 60), // Increases font size
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12), // Makes it rounded rectangle
-              ), ),
-              child: Text(localizations.text),
-            ),
-            ),
-            SizedBox(height: 25),
-            Expanded(child: ElevatedButton(
-              onPressed: () {
-                // Navigate to the webview chat when pressed
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => WebViewApp(url: 'https://chat.trvr.org/'),
+      appBar: AppBar(),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 24),
+              Text('Home', style: theme.textTheme.displayLarge),
+              const SizedBox(height: 16),
+              Text(
+                localizations.homeDescription,
+                style: theme.textTheme.bodyLarge,
+              ),
+              const SizedBox(height: 40),
+              SizedBox(
+                height: 80,
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const WebViewApp(url: 'https://chat.trvr.org/'),
+                      ),
+                    );
+                  },
+                  style: homeButtonsStyle,
+                  child: Text(localizations.chat),
+                ),
+              ),
+              const SizedBox(height: 25),
+              if (tempCondition)
+                ...[
+                  SizedBox(
+                    height: 80,
+                    child: ElevatedButton(
+                      onPressed: () => sendSMS('sms:+18664887386'),
+                      style: homeButtonsStyle,
+                      child: Text(localizations.text),
                     ),
-                  );
-                },
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity, 60), // Ensures full width
-                textStyle: TextStyle(fontSize: 60), // Increases font size
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12), // Makes it rounded rectangle
-              ), ),
-              child: Text(localizations.chat)
-            ), ),
-            SizedBox(height: 25),
-            Expanded(child: ElevatedButton(
-              onPressed: () => openCallApp('+18664887386'),
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity, 60), // Ensures full width
-                textStyle: TextStyle(fontSize: 60), // Increases font size
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12), // Makes it rounded rectangle
-              ), ),
-              child: Text(localizations.call),
-            ), ), 
-            SizedBox(height: 25),
-          ],
+                  ),
+                  const SizedBox(height: 25),
+                  SizedBox(
+                    height: 80,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () => openCallApp('+18664887386'),
+                      style: homeButtonsStyle,
+                      child: Text(localizations.call),
+                    ),
+                  ),
+                ]
+              else
+                SizedBox(
+                  height: 80,
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => openWhatsApp('+525592253337'),
+                    style: homeButtonsStyle,
+                    child: Text(localizations.text),
+                  ),
+                ),
+              const SizedBox(height: 25),
+            ],
+          ),
         ),
       ),
     );
-}
   }
+}

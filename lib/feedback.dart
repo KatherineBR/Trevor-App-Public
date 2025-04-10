@@ -3,8 +3,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 const List<Widget> feedbackTypes = <Widget>[
-  Text('Communication'),
-  Text('App')
+  Text('Communication', style: TextStyle(fontSize: 12)),
+  Text('App', style: TextStyle(fontSize: 12))
 ];
 
 
@@ -21,7 +21,7 @@ class _MyWidgetState extends State<FeedbackApp> {
   final _communicationFormKey = GlobalKey<_CommunicationFeedbackFormState>();
   final _appFormKey = GlobalKey<_AppFeedbackFormState>();
 
-  void _submit() {
+    void _submit() {
     if (_selectedFeedbackType[0]) {
       // Communication form is active
       final formState = _communicationFormKey.currentState;
@@ -58,7 +58,8 @@ class _MyWidgetState extends State<FeedbackApp> {
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Feedback submitted. Thank you!'))
+      SnackBar(content: Text('Feedback submitted. Thank you!'),
+      ),
     );
   }
 
@@ -68,14 +69,21 @@ class _MyWidgetState extends State<FeedbackApp> {
   final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(localizations.feedback),
-      ),
-      body: Center(
-        child: Column(
-        children: <Widget>[
-            Text('Feedback type', style: theme.textTheme.titleSmall),
-              const SizedBox(height: 5),
+      appBar: AppBar(),
+      body: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 40),
+          child: Column(
+          children: <Widget>[
+            SizedBox(height: 24),
+            Text('Feedback', style: theme.textTheme.displayLarge),
+            SizedBox(height: 16),
+            Text(
+                        _selectedFeedbackType[0]
+              ? localizations.feedbackDescriptionCommunications
+              : localizations.feedbackDescriptionApp,
+              style: theme.textTheme.bodyLarge,
+            ),
+              const SizedBox(height: 25),
               ToggleButtons(
                 onPressed: (int index) {
                   setState(() {
@@ -86,10 +94,10 @@ class _MyWidgetState extends State<FeedbackApp> {
                   });
                 },
                 borderRadius: const BorderRadius.all(Radius.circular(8)),
-                selectedBorderColor: Colors.red[700],
+                selectedBorderColor: theme.colorScheme.primary,
                 selectedColor: Colors.white,
-                fillColor: Colors.red[200],
-                color: Colors.red[400],
+                fillColor: theme.primaryColor.withAlpha(99),
+                color: theme.primaryColor,
                 constraints: const BoxConstraints(
                   minHeight: 60.0,
                   minWidth: 100.0),
@@ -147,7 +155,9 @@ class CommunicationFeedbackForm extends StatefulWidget {
   State<CommunicationFeedbackForm> createState() => _CommunicationFeedbackFormState();
 }
 
-
+/*
+  This is the Communication Feedback Form
+*/
 class _CommunicationFeedbackFormState extends State<CommunicationFeedbackForm> {
   final List<bool> _selectedRating = List.generate(10, (_) => false);
   final communicationsFormQuestion1 = TextEditingController();
@@ -182,7 +192,7 @@ class _CommunicationFeedbackFormState extends State<CommunicationFeedbackForm> {
           height: MediaQuery.of(context).size.width * 0.1,
         ),
         Text(localizations.communicationsFormQuestion3, style: theme.textTheme.titleSmall),
-        // const SizedBox(height: 5)
+        const SizedBox(height: 5),
         ToggleButtons(
           onPressed: (int index) {
             setState(() {
@@ -193,13 +203,13 @@ class _CommunicationFeedbackFormState extends State<CommunicationFeedbackForm> {
             });
           },
           borderRadius: const BorderRadius.all(Radius.circular(8)),
-          selectedBorderColor: Colors.red[700],
+          selectedBorderColor: theme.primaryColor,
           selectedColor: Colors.white,
-          fillColor: Colors.red[200],
-          color: Colors.red[400],
+          fillColor: theme.primaryColor.withAlpha(99),
+          color: theme.primaryColor,
           constraints: const BoxConstraints(
             minHeight: 60.0,
-            minWidth: 40.0),
+            minWidth: 30.0),
           isSelected: _selectedRating,
           children: ratingsCommunication,
         ),
@@ -210,6 +220,13 @@ class _CommunicationFeedbackFormState extends State<CommunicationFeedbackForm> {
     );
   }
 }
+
+
+/*
+
+  This is the Application Feedback Form
+
+*/
 
 const List<Widget> ratingsApp = <Widget>[
   Text('1'),
@@ -258,10 +275,10 @@ class _AppFeedbackFormState extends State<AppFeedbackForm> {
             });
           },
           borderRadius: const BorderRadius.all(Radius.circular(8)),
-          selectedBorderColor: Colors.red[700],
+          selectedBorderColor: theme.primaryColor,
           selectedColor: Colors.white,
-          fillColor: Colors.red[200],
-          color: Colors.red[400],
+          fillColor: theme.primaryColor.withAlpha(99),
+          color: theme.primaryColor,
           constraints: const BoxConstraints(
             minHeight: 60.0,
             minWidth: 40.0),
