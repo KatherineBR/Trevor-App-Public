@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 const List<Widget> feedbackTypes = <Widget>[
@@ -21,18 +22,19 @@ class _MyWidgetState extends State<FeedbackApp> {
   final _communicationFormKey = GlobalKey<_CommunicationFeedbackFormState>();
   final _appFormKey = GlobalKey<_AppFeedbackFormState>();
 
-    void _submit() {
+  void _submit() async {
     if (_selectedFeedbackType[0]) {
       // Communication form is active
       final formState = _communicationFormKey.currentState;
       if (formState != null) {
         // Get all form data
-        final Map<String, dynamic> formData = {
+        final Map<String, dynamic>  formData = {
           'communicationsFormQuestion1': formState.communicationsFormQuestion1.text,
           'communicationsFormQuestion2': formState.communicationsFormQuestion2.text,
           'communicationsFormQuestion3': formState._selectedRating.where((isSelected) => isSelected).length,
         };
 
+        sendData(formData);
         // print('Communication Form Data: $formData');
       }
     } else {
@@ -48,19 +50,36 @@ class _MyWidgetState extends State<FeedbackApp> {
           return;
         }
 
-        final Map<String, dynamic> formData = {
+        final Map<String, dynamic>  formData = {
           'appFormQuestion1': formState.appFormQuestion1.text,
           'appFormQuestion2': formState._selectedRating.where((isSelected) => isSelected).length,
         };
 
+        sendData(formData);
         // print('App Form Data: $formData');
       }
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Feedback submitted. Thank you!'),
-      ),
-    );
+  }
+
+  void sendData(formData) async {
+    if(formData){
+      try {
+        await FirebaseFirestore.instance
+          .collection('conversationFeedback')
+          .add(formData);
+
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Feedback submitted. Thank you!'))
+        );
+      } catch (error) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error submitting feedback: $error'))
+        );
+      } 
+    }
   }
 
   @override

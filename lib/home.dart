@@ -3,9 +3,57 @@ import 'webview_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'theme.dart';
+import 'locationservice.dart';
 
-class MyHomePage extends StatelessWidget {
+// changed this class to include states
+class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
+  
+  // creates the state for the page page
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage>{
+  // the two elements in this state
+  String _countryCode = 'US'; // default country code is set to US
+  bool _loading = true;
+  
+  // map that holds the two different urls with the country codes as the keys
+  Map<String, String> chatUrl = {
+    'US': 'http://chat.trvr.org/',
+    'MX': 'http://chat.trvr.mx/',
+  };
+
+  // initstate method called when state object is inserted into the widget 
+  // tree for the first time, allowing initialization of country code before
+  // the widget is built.
+  @override
+  void initState() {
+    super.initState();
+    _initializeCountryCode();
+  }
+
+  // tries to get the device's countrycode by calling on the getUserCountry
+  // function in the Location service file
+  Future<void> _initializeCountryCode() async {
+    try {
+      final code = await LocationService.getUserCountry();
+      debugPrint("Success! Country Code: $code");
+      setState(() {
+        _countryCode = code;
+        _loading = false;
+      });
+    }
+    // if there is an error, the default countrycode is US
+    catch (error) {
+      debugPrint("Location error: $error. Defaulting to US.");
+      setState(() {
+        _countryCode = 'US';
+        _loading = false;
+      });
+    }
+  }
 
   Future<void> sendSMS(String phoneNumber) async {
     final Uri smsUri = Uri.parse('sms:$phoneNumber'); // `sms:` opens the messaging app
@@ -77,8 +125,7 @@ class MyHomePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 25),
-              if (tempCondition)
-                ...[
+              if (_countryCode != 'MX')
                   SizedBox(
                     height: 80,
                     child: ElevatedButton(
@@ -97,8 +144,7 @@ class MyHomePage extends StatelessWidget {
                       child: Text(localizations.call),
                     ),
                   ),
-                ]
-              else
+              if (_countryCode == 'MX')
                 SizedBox(
                   height: 80,
                   width: double.infinity,

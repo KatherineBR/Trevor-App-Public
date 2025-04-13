@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'webview_controller.dart';
 import 'theme.dart';
+import 'locationservice.dart';
 
 // Defines a custom stateless widget for resourcecard
 class ResourceCard extends StatelessWidget {
@@ -22,7 +23,6 @@ class ResourceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return SizedBox(
       height: 80,
       child: ElevatedButton(
@@ -60,7 +60,18 @@ class ResourceCard extends StatelessWidget {
 }
 
 // Stateless widget for the entire list of resource cards
-class ResourcesPage extends StatelessWidget {
+class ResourcesPage extends StatefulWidget {
+  const ResourcesPage({super.key});
+
+  @override
+  State<ResourcesPage> createState() => _ResourcesPageState();
+}
+
+class _ResourcesPageState extends State<ResourcesPage> {
+  String _countryCode = 'US';
+  bool _loading = true;
+
+
   final List<Map<String, String>> resources = [
     // List of sample data for the resource card
     {
@@ -83,7 +94,44 @@ class ResourcesPage extends StatelessWidget {
       'description': 'Read inspiring stories and updates.',
       'url': 'https://www.thetrevorproject.org/blog/',
     },
+
+    /*
+    'MX': {
+      'Resources': 'https://www.thetrevorproject.mx/recursos/',
+      'Research Briefs': 'https://www.thetrevorproject.org/research-briefs/',
+      'Breathing Exercises': 'https://www.thetrevorproject.org/breathing-exercise/',
+      'Blogs': 'https://www.thetrevorproject.org/blog/',
+    },
+    */
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    // fetches the user's countrycode/location
+    _initializeCountryCode();
+  }
+
+  Future<void> _initializeCountryCode() async {
+    // tries to get the device's countrycode by calling on the getUserCountry
+    // function in the Location service file
+    try {
+      final code = await LocationService.getUserCountry();
+      debugPrint("Success! Country Code: $code");
+      setState(() {
+        _countryCode = code;
+        _loading = false;
+      });
+    }
+    // if there is an error, uses US as the default countryCode. 
+    catch (error) {
+      debugPrint("Location error: $error. Defaulting to US.");
+      setState(() {
+        _countryCode = 'US';
+        _loading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +146,7 @@ class ResourcesPage extends StatelessWidget {
           children: [
             // Margin
             SizedBox(height: 24),
-            Text('Resources', style: theme.textTheme.displayLarge),
+            Text(localizations.resources, style: theme.textTheme.displayLarge),
             // First button
             SizedBox(height: 16),
             Text(

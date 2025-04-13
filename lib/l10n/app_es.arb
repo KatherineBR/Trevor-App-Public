@@ -15,5 +15,18 @@
   "appFormQuestion1" : "¿Cómo estás disfrutando de esta aplicación?",
   "appFormQuestion2" : "Califícanos de 1 a 5 estrellas",
   "homeDescription" : "Tener dudas sobre tu identidad de género u orientación sexual es normal. Si sientes ansiedad, miedo o has pensado en hacerte daño, escríbenos. Es gratuito y confidencial.",
-  "resourcesDecription" : "En esta sección, encontrarás recursos útiles para apoyar tu bienestar y conectar con la comunidad LGBTQ+. Explora ejercicios de respiración, investigaciones, noticias y oportunidades para involucrarte. Toca cualquier recurso para obtener más información en nuestro sitio web."
+  "resourcesDecription" : "En esta sección, encontrarás recursos útiles para apoyar tu bienestar y conectar con la comunidad LGBTQ+. Explora ejercicios de respiración, investigaciones, noticias y oportunidades para involucrarte. Toca cualquier recurso para obtener más información en nuestro sitio web.",
+  "appFormQuestion1" : "Did you find this app helpful?",
+  "appFormQuestion2" : "Rate us 1-5 stars",
+  "communicationsFormQuestion1" : "¿Esta conversación fue de ayuda para ti?",
+  "communicationsFormQuestion2" : "¿Cómo te sientes después de esta conversación?",
+  "communicationsFormQuestion3": "TBD",
+  "communicationsFormDescription" : "Gracias por comunicarte y hablar con uno de nuestros consejerxs hoy. Por favor, completa esta breve encuesta para contarnos sobre tu experiencia. Tus respuestas serán confidenciales y utilizaremos esta información para mejorar la calidad de nuestro servicio.",
+  "yes" : "Si",
+  "no" : "No",
+  "better" : "Mejor",
+  "same" : "Igual",
+  "worse" : "Peor",
+  "bad" : "Muy mal",
+  "good" : "Muy bien"
 }
