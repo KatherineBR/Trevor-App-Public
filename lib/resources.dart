@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'webview_controller.dart';
+import 'theme.dart';
 import 'locationservice.dart';
 import 'switch_icon.dart';
 
-//defines a custom stateless widget for resourcecard
+// Defines a custom stateless widget for resourcecard
 class ResourceCard extends StatelessWidget {
-  // required properties for the card
+  // Required properties for the card
   final String title;
   final String description;
   final String url;
 
-  // constructor for the resource card requiring the previously defined properties
+  // Constructor for the resource card requiring the previously defined properties
   const ResourceCard({
     super.key,
     required this.title,
@@ -21,54 +24,43 @@ class ResourceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // determines the characteristics of each of the cards
-    return Card(
-      color: const Color.fromARGB(255, 169, 228, 255),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 4,
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: ListTile(
-        title: Text(
-          title,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        subtitle: Text(description),
-        onTap: () {
+    return SizedBox(
+      height: 80,
+      child: ElevatedButton(
+        onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => WebViewApp(url: url)), // Replace with your destination
+            MaterialPageRoute(builder: (context) => WebViewApp(url: url))
           );
-        }
+        },
+        style: AppTheme.largeButtonStyle,
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(description,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
+              )),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
 
-// a map of maps containing all the urls of used in the resources card 
-// differentiated by the countrycodes
-class ResourcesUrl {
-  static final Map<String, Map<String, String>> urls = {
-    'US': {
-      'Resources': 'https://www.thetrevorproject.org/resources/',
-      'Research Briefs': 'https://www.thetrevorproject.org/research-briefs/',
-      'Breathing Exercises': 'https://www.thetrevorproject.org/breathing-exercise/',
-      'Blogs': 'https://www.thetrevorproject.org/blog/',
-    },
-    'MX': {
-      'Resources': 'https://www.thetrevorproject.mx/recursos/',
-      'Research Briefs': 'https://www.thetrevorproject.org/research-briefs/',
-      'Breathing Exercises': 'https://www.thetrevorproject.org/breathing-exercise/',
-      'Blogs': 'https://www.thetrevorproject.org/blog/',
-    },
-  };
-  static getUrl(title, countryCode) {
-    //fetches the url for the given title under the countrycode
-    // the "!" operator asserts that the values are not null
-    return urls[countryCode]![title]!;
-  }
-}
-
-// a class that contains a state
+// Stateless widget for the entire list of resource cards
 class ResourcesPage extends StatefulWidget {
   const ResourcesPage({super.key});
 
@@ -83,28 +75,38 @@ class _ResourcesPageState extends State<ResourcesPage> {
   bool _iconSwitched = false;
 
   final List<Map<String, String>> resources = [
-    // list of sample data for the resource card 
+    // List of sample data for the resource card
     {
       'title': 'Resources',
       'description': 'A collection of helpful resources.',
+      'url': 'https://www.thetrevorproject.org/resources/',
     },
     {
       'title': 'Research Briefs',
       'description': 'Explore the latest research studies.',
+      'url': 'https://www.thetrevorproject.org/research-briefs/',
     },
     {
       'title': 'Breathing Exercises',
       'description': 'Learn to manage stress with breathing techniques.',
+      'url': 'https://www.thetrevorproject.org/breathing-exercise/',
     },
     {
       'title': 'Blogs',
       'description': 'Read inspiring stories and updates.',
+      'url': 'https://www.thetrevorproject.org/blog/',
     },
+
+    /*
+    'MX': {
+      'Resources': 'https://www.thetrevorproject.mx/recursos/',
+      'Research Briefs': 'https://www.thetrevorproject.org/research-briefs/',
+      'Breathing Exercises': 'https://www.thetrevorproject.org/breathing-exercise/',
+      'Blogs': 'https://www.thetrevorproject.org/blog/',
+    },
+    */
   ];
 
-  // initstate method called when state object is inserted into the widget 
-  // tree for the first time, allowing initialization of country code before
-  // the widget is built.
   @override
   void initState() {
     super.initState();
@@ -135,27 +137,43 @@ class _ResourcesPageState extends State<ResourcesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Resources')),
-      // body of the page contains listview for multiple resourcecard widgets to be displayed
-      body: _loading
-            ? const Center(child: CircularProgressIndicator())
-            : ListView.builder(
-              itemCount: resources.length,
-              itemBuilder: (context, index) {
-                // creates a resourcecard for each item in the list
-                final resource = resources[index];
-                final title = resource['title']!;
-                final description = resource['description']!;
-                // calls for the getUrl function in the new ResourcesUrl class
-                final url = ResourcesUrl.getUrl(title, _countryCode);
-                return ResourceCard(
-                  title: title,
-                  description: description,
-                  url: url,
-                );
-              },
+      appBar: AppBar(),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 40),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Margin
+            SizedBox(height: 24),
+            Text(localizations.resources, style: theme.textTheme.displayLarge),
+            // First button
+            SizedBox(height: 16),
+            Text(
+              localizations.resourcesDecription,
+              style: theme.textTheme.bodyLarge,
             ),
+            // spacing
+            SizedBox(height : 25),
+            ...resources.map((resource) {
+              // Creates a resourcecard for each item in the list
+              return Column(
+                children : [
+                  ResourceCard(
+                title: resource['title']!,
+                description: resource['description']!,
+                url: resource['url']!,
+                ),
+                // spacing between each card
+                  SizedBox(height: 16),
+                ],
+              );
+            })
+          ],
+        ),
+      ),
       // Temporary switch icon button at the bottom to test
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {

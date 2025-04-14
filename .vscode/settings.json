@@ -1,3 +1,4 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "cmake.sourceDirectory": "/Users/pedrogarcia/t4sg/t4sg-trevor-app/android/flutter/dev/manual_tests/windows"
 }
