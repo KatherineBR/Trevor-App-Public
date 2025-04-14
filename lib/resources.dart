@@ -72,7 +72,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
   String _countryCode = 'US';
   bool _loading = true;
   // TODO: Remove temp var
-  bool _iconSwitched = false;
+  bool _iconSwitched = true;
 
   final List<Map<String, String>> resources = [
     // List of sample data for the resource card

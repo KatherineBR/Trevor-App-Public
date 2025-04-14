@@ -1,11 +1,13 @@
 package com.example.trevor_app
 
+import android.os.Bundle
 import android.content.ComponentName
 import android.content.pm.PackageManager
 import android.util.Log
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import android.view.WindowManager
 
 class MainAlias
 class TrevorAlias
@@ -15,6 +17,14 @@ class MainActivity : FlutterActivity() {
     companion object {
         private const val CHANNEL = "com.trevor.app/icon"
         private const val TAG = "TrevorApp"
+    }
+
+    override fun onCreate(savedInstanceState: android.os.Bundle?) {        
+        // Secure screen when switching tabs
+        window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+
+        super.onCreate(savedInstanceState)
+
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
