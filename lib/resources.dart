@@ -34,7 +34,7 @@ class ResourceCard extends StatelessWidget {
             MaterialPageRoute(builder: (context) => WebViewApp(url: url))
           );
         },
-        style: AppTheme.largeButtonStyle,
+        style: AppTheme.getLargeButtonStyle(context, colorIndex: 1),
         child: Align(
           alignment: Alignment.centerLeft,
           child: Column(
@@ -70,12 +70,13 @@ class ResourcesPage extends StatefulWidget {
 }
 
 class _ResourcesPageState extends State<ResourcesPage> {
+
   String _countryCode = 'US';
   bool _loading = true;
   // TODO: Remove temp var
   bool _iconSwitched = false;
-
   List<Map<String, String>> resources = [];
+
     /*
     'MX': {
       'Resources': 'https://www.thetrevorproject.mx/recursos/',
@@ -104,7 +105,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
         _loading = false;
       });
     }
-    // if there is an error, uses US as the default countryCode. 
+    // if there is an error, uses US as the default countryCode.
     catch (error) {
       debugPrint("Location error: $error. Defaulting to US.");
       setState(() {
@@ -141,15 +142,14 @@ class _ResourcesPageState extends State<ResourcesPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 40),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Margin
-            SizedBox(height: 24),
             Text(localizations.resources, style: theme.textTheme.displayLarge),
             // First button
             SizedBox(height: 16),
