@@ -1,30 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'home.dart';        // Import home.dart
-import 'feedback.dart';   // Import feedback.dart
-import 'resources.dart'; // Import resources.dart
-import 'theme.dart';        // Import theme.dart
+import 'home.dart';
+import 'feedback.dart';
+import 'resources.dart';
+import 'theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import "settingsdrawer.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-  options: DefaultFirebaseOptions.currentPlatform,
+    options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _useDefaultTheme = true;
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
-      themeMode: ThemeMode.system,
+      theme: _useDefaultTheme ? AppTheme.getTheme() : AppTheme.getAlternativeTheme(),
       // loads localized resources
       localizationsDelegates: [
         AppLocalizations.delegate,
@@ -34,17 +41,24 @@ class MyApp extends StatelessWidget {
       ],
       // lists the languages that the app supports
       supportedLocales: [
-        Locale('en', 'US'), // English
+        // Locale('en', 'US'), // English
         Locale('es', 'MX'), // Spanish
       ],
-      theme: AppTheme.getTheme(),
-      home: const HomeScreen(),
+      home: HomeScreen(
+        onThemeChanged: (bool useDefault) {
+          setState(() {
+            _useDefaultTheme = useDefault;
+          });
+        },
+      ),
     );
   }
 }
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final Function(bool)? onThemeChanged;
+
+  const HomeScreen({super.key, this.onThemeChanged});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -72,10 +86,35 @@ class _HomeScreenState extends State<HomeScreen> {
     final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex, // Show the page based on the selected index
-        children: _pages, // The list of pages
+      appBar: AppBar(
+        actions: [
+          Builder(
+            builder: (context) => IconButton(
+              icon: Icon(Icons.settings),
+              onPressed: () => Scaffold.of(context).openEndDrawer(),
+            ),
+          ),
+        ],
       ),
+      endDrawer: SettingsDrawer(
+        onThemeChanged: (bool value) {
+          if (widget.onThemeChanged != null) {
+            widget.onThemeChanged!(value);
+          }
+        },
+      ),
+      body: Column(
+        children: [
+          const SizedBox(height: 24),
+          Expanded(
+            child: IndexedStack(
+              index: _selectedIndex,
+              children: _pages,
+            ),
+          ),
+        ],
+      ),
+      // styles
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: _onItemTapped, // Handle selection of nav items

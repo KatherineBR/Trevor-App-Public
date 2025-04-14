@@ -8,7 +8,7 @@ import 'locationservice.dart';
 // changed this class to include states
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
-  
+
   // creates the state for the page page
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -18,14 +18,14 @@ class _MyHomePageState extends State<MyHomePage>{
   // the two elements in this state
   String _countryCode = 'US'; // default country code is set to US
   bool _loading = true;
-  
+
   // map that holds the two different urls with the country codes as the keys
   Map<String, String> chatUrl = {
     'US': 'http://chat.trvr.org/',
     'MX': 'http://chat.trvr.mx/',
   };
 
-  // initstate method called when state object is inserted into the widget 
+  // initstate method called when state object is inserted into the widget
   // tree for the first time, allowing initialization of country code before
   // the widget is built.
   @override
@@ -88,19 +88,16 @@ class _MyHomePageState extends State<MyHomePage>{
       Widget build(BuildContext context) {
         final localizations = AppLocalizations.of(context)!;
         final theme = Theme.of(context);
-        final homeButtonsStyle = AppTheme.largeButtonStyle;
         const tempCondition = false; // Placeholder for actual condition for later
 
     return Scaffold(
-      appBar: AppBar(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 24),
-              Text('Home', style: theme.textTheme.displayLarge),
+              Text(localizations.home, style: theme.textTheme.displayLarge),
               const SizedBox(height: 16),
               Text(
                 localizations.homeDescription,
@@ -120,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage>{
                       ),
                     );
                   },
-                  style: homeButtonsStyle,
+                  style:  AppTheme.getLargeButtonStyle(context, colorIndex: 1),
                   child: Text(localizations.chat),
                 ),
               ),
@@ -130,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage>{
                     height: 80,
                     child: ElevatedButton(
                       onPressed: () => sendSMS('sms:+18664887386'),
-                      style: homeButtonsStyle,
+                      style:  AppTheme.getLargeButtonStyle(context, colorIndex: 1),
                       child: Text(localizations.text),
                     ),
                   ),
@@ -140,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage>{
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () => openCallApp('+18664887386'),
-                      style: homeButtonsStyle,
+                      style:  AppTheme.getLargeButtonStyle(context, colorIndex: 1),
                       child: Text(localizations.call),
                     ),
                   ),
@@ -150,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage>{
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () => openWhatsApp('+525592253337'),
-                    style: homeButtonsStyle,
+                    style:  AppTheme.getLargeButtonStyle(context, colorIndex: 2),
                     child: Text(localizations.text),
                   ),
                 ),
