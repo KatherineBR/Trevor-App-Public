@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: _useDefaultTheme ? AppTheme.getTheme() : AppTheme.getAlternativeTheme(),
+      theme: _useDefaultTheme ?AppTheme.getAlternativeTheme() : AppTheme.getTheme()  ,
       // loads localized resources
       localizationsDelegates: [
         AppLocalizations.delegate,

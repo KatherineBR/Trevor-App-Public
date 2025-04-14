@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'webview_controller.dart';
 import 'theme.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SettingsDrawer extends StatefulWidget {
   final Function(bool) onThemeChanged;
@@ -21,11 +23,12 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
     super.didChangeDependencies();
     // Compare with the theme from AppTheme.getTheme() instead of hardcoding
     final defaultThemeColor = AppTheme.getTheme().primaryColor;
-    isDefaultTheme = Theme.of(context).primaryColor == defaultThemeColor;
+    isDefaultTheme = Theme.of(context).primaryColor != defaultThemeColor;
   }
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     return Drawer(
       child: ListView(
@@ -36,7 +39,7 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
             decoration: BoxDecoration(color: theme.colorScheme.primary),
           ),
           SwitchListTile(
-            title: const Text('Theme'),
+            title: Text(localizations.theme),
             value: isDefaultTheme,
             onChanged: (bool newValue) {
               setState(() {
@@ -46,7 +49,7 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
             },
           ),
           ListTile(
-            title: const Text('Contact Us'),
+            title: Text(localizations.contactUs),
             trailing: const Icon(Icons.open_in_new),
             onTap: () {
               Navigator.push(

@@ -35,5 +35,7 @@
   "blogsDescription": "Lee historias inspiradoras y actualizaciones",
   "communication": "Comunicación",
   "app": "Aplicación",
-  "resourceCardDescription" : "Una colección de recursos útiles."
+  "resourceCardDescription" : "Una colección de recursos útiles.",
+  "contactUs" : "Contáctanos",
+  "theme" : "Tema"
 }

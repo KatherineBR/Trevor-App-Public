@@ -33,5 +33,7 @@
   "blogs" : "Blogs",
   "blogsDescription" : " Read inspiring stories and updates",
   "communication" : "Communication",
-  "app" : "App"
+  "app" : "App",
+  "contactUs" : "Contact us",
+  "theme" : "Theme"
 }
