@@ -1,7 +1,7 @@
 {
   "appTitle": "Página de inicio de demostración de Flutter",
   "call": "Llámanos",
-  "text": "Envíanos un mensaje por WhatsApp",
+  "text": "Contáctanos por WhatsApp",
   "chat": "Búscanos para chatear",
   "chatURL": "http://chat.trvr.mx/",
   "home" : "Hogar",
@@ -16,8 +16,6 @@
   "appFormQuestion2" : "Califícanos de 1 a 5 estrellas",
   "homeDescription" : "Tener dudas sobre tu identidad de género u orientación sexual es normal. Si sientes ansiedad, miedo o has pensado en hacerte daño, escríbenos. Es gratuito y confidencial.",
   "resourcesDecription" : "En esta sección, encontrarás recursos útiles para apoyar tu bienestar y conectar con la comunidad LGBTQ+. Explora ejercicios de respiración, investigaciones, noticias y oportunidades para involucrarte. Toca cualquier recurso para obtener más información en nuestro sitio web.",
-  "appFormQuestion1" : "Did you find this app helpful?",
-  "appFormQuestion2" : "Rate us 1-5 stars",
   "communicationsFormQuestion1" : "¿Esta conversación fue de ayuda para ti?",
   "communicationsFormQuestion2" : "¿Cómo te sientes después de esta conversación?",
   "communicationsFormQuestion3": "TBD",
@@ -28,5 +26,16 @@
   "same" : "Igual",
   "worse" : "Peor",
   "bad" : "Muy mal",
-  "good" : "Muy bien"
+  "good" : "Muy bien",
+  "submit" : "Enviar",
+  "research": "Resúmenes de Investigación",
+  "resarchDescription": "Explora los estudios de investigación más recientes.",
+  "breathing": "Ejercicios de Respiración",
+  "blogs": "Blogs",
+  "blogsDescription": "Lee historias inspiradoras y actualizaciones",
+  "communication": "Comunicación",
+  "app": "Aplicación",
+  "resourceCardDescription" : "Una colección de recursos útiles.",
+  "contactUs" : "Contáctanos",
+  "theme" : "Tema"
 }

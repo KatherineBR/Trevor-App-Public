@@ -32,7 +32,7 @@ class ResourceCard extends StatelessWidget {
             MaterialPageRoute(builder: (context) => WebViewApp(url: url))
           );
         },
-        style: AppTheme.largeButtonStyle,
+        style: AppTheme.getLargeButtonStyle(context, colorIndex: 1),
         child: Align(
           alignment: Alignment.centerLeft,
           child: Column(
@@ -68,42 +68,10 @@ class ResourcesPage extends StatefulWidget {
 }
 
 class _ResourcesPageState extends State<ResourcesPage> {
+
   String _countryCode = 'US';
   bool _loading = true;
 
-
-  final List<Map<String, String>> resources = [
-    // List of sample data for the resource card
-    {
-      'title': 'Resources',
-      'description': 'A collection of helpful resources.',
-      'url': 'https://www.thetrevorproject.org/resources/',
-    },
-    {
-      'title': 'Research Briefs',
-      'description': 'Explore the latest research studies.',
-      'url': 'https://www.thetrevorproject.org/research-briefs/',
-    },
-    {
-      'title': 'Breathing Exercises',
-      'description': 'Learn to manage stress with breathing techniques.',
-      'url': 'https://www.thetrevorproject.org/breathing-exercise/',
-    },
-    {
-      'title': 'Blogs',
-      'description': 'Read inspiring stories and updates.',
-      'url': 'https://www.thetrevorproject.org/blog/',
-    },
-
-    /*
-    'MX': {
-      'Resources': 'https://www.thetrevorproject.mx/recursos/',
-      'Research Briefs': 'https://www.thetrevorproject.org/research-briefs/',
-      'Breathing Exercises': 'https://www.thetrevorproject.org/breathing-exercise/',
-      'Blogs': 'https://www.thetrevorproject.org/blog/',
-    },
-    */
-  ];
 
   @override
   void initState() {
@@ -123,7 +91,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
         _loading = false;
       });
     }
-    // if there is an error, uses US as the default countryCode. 
+    // if there is an error, uses US as the default countryCode.
     catch (error) {
       debugPrint("Location error: $error. Defaulting to US.");
       setState(() {
@@ -137,15 +105,37 @@ class _ResourcesPageState extends State<ResourcesPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context)!;
+
+    final List<Map<String, String>> resources = [
+      {
+        'title': localizations.resources,
+        'description': localizations.resourceCardDescription,
+        'url': 'https://www.thetrevorproject.org/resources/',
+      },
+      {
+        'title': localizations.research,
+        'description': localizations.resarchDescription,
+        'url': 'https://www.thetrevorproject.org/research-briefs/',
+      },
+      {
+        'title': localizations.breathing,
+        'description': localizations.breathingDescription,
+        'url': 'https://www.thetrevorproject.org/breathing-exercise/',
+      },
+      {
+        'title': localizations.blogs,
+        'description': localizations.blogsDescription,
+        'url': 'https://www.thetrevorproject.org/blog/',
+      },
+  ];
+
     return Scaffold(
-      appBar: AppBar(),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 40),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Margin
-            SizedBox(height: 24),
             Text(localizations.resources, style: theme.textTheme.displayLarge),
             // First button
             SizedBox(height: 16),
