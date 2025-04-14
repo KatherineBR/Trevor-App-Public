@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'webview_controller.dart';
 import 'locationservice.dart';
+import 'switch_icon.dart';
 
 //defines a custom stateless widget for resourcecard
 class ResourceCard extends StatelessWidget {
@@ -78,6 +79,8 @@ class ResourcesPage extends StatefulWidget {
 class _ResourcesPageState extends State<ResourcesPage> {
   String _countryCode = 'US';
   bool _loading = true;
+  // TODO: Remove temp var
+  bool _iconSwitched = false;
 
   final List<Map<String, String>> resources = [
     // list of sample data for the resource card 
@@ -135,24 +138,35 @@ class _ResourcesPageState extends State<ResourcesPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Resources')),
       // body of the page contains listview for multiple resourcecard widgets to be displayed
-   body: _loading
-        ? const Center(child: CircularProgressIndicator())
-        : ListView.builder(
-          itemCount: resources.length,
-          itemBuilder: (context, index) {
-            // creates a resourcecard for each item in the list
-            final resource = resources[index];
-            final title = resource['title']!;
-            final description = resource['description']!;
-            // calls for the getUrl function in the new ResourcesUrl class
-            final url = ResourcesUrl.getUrl(title, _countryCode);
-            return ResourceCard(
-              title: title,
-              description: description,
-              url: url,
-            );
-          },
-        ),
+      body: _loading
+            ? const Center(child: CircularProgressIndicator())
+            : ListView.builder(
+              itemCount: resources.length,
+              itemBuilder: (context, index) {
+                // creates a resourcecard for each item in the list
+                final resource = resources[index];
+                final title = resource['title']!;
+                final description = resource['description']!;
+                // calls for the getUrl function in the new ResourcesUrl class
+                final url = ResourcesUrl.getUrl(title, _countryCode);
+                return ResourceCard(
+                  title: title,
+                  description: description,
+                  url: url,
+                );
+              },
+            ),
+      // Temporary switch icon button at the bottom to test
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async {
+          setState(() {
+            _iconSwitched = !_iconSwitched;
+          });
+          await AppIconSwitcher.switchAppIcon(_iconSwitched);
+        },
+        label: const Text("Switch Icon"),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
