@@ -6,6 +6,7 @@ import 'webview_controller.dart';
 import 'theme.dart';
 import 'locationservice.dart';
 import 'switch_icon.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Defines a custom stateless widget for resourcecard
 class ResourceCard extends StatelessWidget {
@@ -72,31 +73,9 @@ class _ResourcesPageState extends State<ResourcesPage> {
   String _countryCode = 'US';
   bool _loading = true;
   // TODO: Remove temp var
-  bool _iconSwitched = true;
+  bool _iconSwitched = false;
 
-  final List<Map<String, String>> resources = [
-    // List of sample data for the resource card
-    {
-      'title': 'Resources',
-      'description': 'A collection of helpful resources.',
-      'url': 'https://www.thetrevorproject.org/resources/',
-    },
-    {
-      'title': 'Research Briefs',
-      'description': 'Explore the latest research studies.',
-      'url': 'https://www.thetrevorproject.org/research-briefs/',
-    },
-    {
-      'title': 'Breathing Exercises',
-      'description': 'Learn to manage stress with breathing techniques.',
-      'url': 'https://www.thetrevorproject.org/breathing-exercise/',
-    },
-    {
-      'title': 'Blogs',
-      'description': 'Read inspiring stories and updates.',
-      'url': 'https://www.thetrevorproject.org/blog/',
-    },
-
+  List<Map<String, String>> resources = [];
     /*
     'MX': {
       'Resources': 'https://www.thetrevorproject.mx/recursos/',
@@ -105,13 +84,13 @@ class _ResourcesPageState extends State<ResourcesPage> {
       'Blogs': 'https://www.thetrevorproject.org/blog/',
     },
     */
-  ];
 
   @override
   void initState() {
     super.initState();
     // fetches the user's countrycode/location
     _initializeCountryCode();
+    _fetchResources(); // Fetch the resources from Firebase backend
   }
 
   Future<void> _initializeCountryCode() async {
@@ -132,6 +111,29 @@ class _ResourcesPageState extends State<ResourcesPage> {
         _countryCode = 'US';
         _loading = false;
       });
+    }
+  }
+
+  Future<void> _fetchResources() async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+        .collection('resourcesPage')
+        .get();
+      
+      final docs = snapshot.docs;
+
+      setState(() {
+        resources = docs.map((doc) {
+          final data = doc.data();
+          return {
+            'title': data['title'].toString(),
+            'description': data['description'].toString(),
+            'url': data['url'].toString(),
+          };
+        }).toList();
+      });
+    } catch (e) {
+      print('Error fetching resources');
     }
   }
 
