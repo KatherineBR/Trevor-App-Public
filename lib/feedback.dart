@@ -219,7 +219,7 @@ class _CommunicationFeedbackFormState extends State<CommunicationFeedbackForm> {
         SizedBox(
           height: MediaQuery.of(context).size.width * 0.1,
         ),
-        Text(localizations.communicationsFormQuestion3, style: theme.textTheme.titleSmall?.copyWith(
+        Text(localizations.communicationsFormQuestion3, style: theme.textTheme.titleMedium?.copyWith(
           color: AppTheme.getButtonColor(context, index: 2),
         )),
         const SizedBox(height: 5),

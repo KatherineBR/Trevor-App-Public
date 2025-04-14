@@ -84,11 +84,10 @@ class _MyHomePageState extends State<MyHomePage>{
       debugPrint('Could not launch WhatsApp. Make sure WhatsApp is installed.');
     }
   }
-    @override
-      Widget build(BuildContext context) {
-        final localizations = AppLocalizations.of(context)!;
-        final theme = Theme.of(context);
-        const tempCondition = false; // Placeholder for actual condition for later
+  @override
+  Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     return Scaffold(
       body: SingleChildScrollView(

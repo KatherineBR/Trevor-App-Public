@@ -25,13 +25,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool _useDefaultTheme = true;
+  bool _useAlternativeTheme = false;
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: _useDefaultTheme ?AppTheme.getAlternativeTheme() : AppTheme.getTheme()  ,
+      theme: _useAlternativeTheme ? AppTheme.getAlternativeTheme() : AppTheme.getTheme()  ,
       // loads localized resources
       localizationsDelegates: [
         AppLocalizations.delegate,
@@ -41,13 +41,13 @@ class _MyAppState extends State<MyApp> {
       ],
       // lists the languages that the app supports
       supportedLocales: [
-        // Locale('en', 'US'), // English
+        Locale('en', 'US'), // English
         Locale('es', 'MX'), // Spanish
       ],
       home: HomeScreen(
         onThemeChanged: (bool useDefault) {
           setState(() {
-            _useDefaultTheme = useDefault;
+            _useAlternativeTheme = useDefault;
           });
         },
       ),

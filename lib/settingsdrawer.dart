@@ -16,14 +16,14 @@ class SettingsDrawer extends StatefulWidget {
 }
 
 class _SettingsDrawerState extends State<SettingsDrawer> {
-  late bool isDefaultTheme;
+  bool isAlternativeTheme = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Compare with the theme from AppTheme.getTheme() instead of hardcoding
     final defaultThemeColor = AppTheme.getTheme().primaryColor;
-    isDefaultTheme = Theme.of(context).primaryColor != defaultThemeColor;
+    isAlternativeTheme = Theme.of(context).primaryColor != defaultThemeColor;
   }
 
   @override
@@ -40,10 +40,10 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
           ),
           SwitchListTile(
             title: Text(localizations.theme),
-            value: isDefaultTheme,
+            value: isAlternativeTheme,
             onChanged: (bool newValue) {
               setState(() {
-                isDefaultTheme = newValue;
+                isAlternativeTheme = newValue;
               });
               widget.onThemeChanged(newValue);
             },
