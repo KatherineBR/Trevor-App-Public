@@ -3,6 +3,7 @@ import 'webview_controller.dart';
 import 'theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'switch_icon.dart';
 
 class SettingsDrawer extends StatefulWidget {
   final Function(bool) onThemeChanged;
@@ -17,6 +18,7 @@ class SettingsDrawer extends StatefulWidget {
 
 class _SettingsDrawerState extends State<SettingsDrawer> {
   bool isAlternativeTheme = false;
+  bool _iconSwitched = false;
 
   @override
   void didChangeDependencies() {
@@ -46,6 +48,16 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                 isAlternativeTheme = newValue;
               });
               widget.onThemeChanged(newValue);
+            },
+          ),
+          SwitchListTile(
+            title: Text(localizations.icon),
+            value: _iconSwitched,
+            onChanged: (bool newValue) async {
+              setState(() {
+                _iconSwitched = !_iconSwitched;
+              });
+              await AppIconSwitcher.switchAppIcon(_iconSwitched);
             },
           ),
           ListTile(

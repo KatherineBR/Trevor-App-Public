@@ -5,7 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'webview_controller.dart';
 import 'theme.dart';
 import 'locationservice.dart';
-import 'switch_icon.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Defines a custom stateless widget for resourcecard
@@ -73,8 +72,6 @@ class _ResourcesPageState extends State<ResourcesPage> {
 
   String _countryCode = 'US';
   bool _loading = true;
-  // TODO: Remove temp var
-  bool _iconSwitched = false;
   List<Map<String, String>> resources = [];
 
     /*
@@ -176,17 +173,6 @@ class _ResourcesPageState extends State<ResourcesPage> {
           ],
         ),
       ),
-      // Temporary switch icon button at the bottom to test
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          setState(() {
-            _iconSwitched = !_iconSwitched;
-          });
-          await AppIconSwitcher.switchAppIcon(_iconSwitched);
-        },
-        label: const Text("Switch Icon"),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
