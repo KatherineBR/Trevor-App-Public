@@ -37,5 +37,6 @@
   "app": "Aplicación",
   "resourceCardDescription" : "Una colección de recursos útiles.",
   "contactUs" : "Contáctanos",
-  "theme" : "Tema"
+  "theme" : "Tema",
+  "icon" : "Icono"
 }

@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'webview_controller.dart';
 import 'theme.dart';
 import 'locationservice.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Defines a custom stateless widget for resourcecard
 class ResourceCard extends StatelessWidget {
@@ -71,13 +72,23 @@ class _ResourcesPageState extends State<ResourcesPage> {
 
   String _countryCode = 'US';
   bool _loading = true;
+  List<Map<String, String>> resources = [];
 
+    /*
+    'MX': {
+      'Resources': 'https://www.thetrevorproject.mx/recursos/',
+      'Research Briefs': 'https://www.thetrevorproject.org/research-briefs/',
+      'Breathing Exercises': 'https://www.thetrevorproject.org/breathing-exercise/',
+      'Blogs': 'https://www.thetrevorproject.org/blog/',
+    },
+    */
 
   @override
   void initState() {
     super.initState();
     // fetches the user's countrycode/location
     _initializeCountryCode();
+    _fetchResources(); // Fetch the resources from Firebase backend
   }
 
   Future<void> _initializeCountryCode() async {
@@ -101,33 +112,33 @@ class _ResourcesPageState extends State<ResourcesPage> {
     }
   }
 
+  Future<void> _fetchResources() async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+        .collection('resourcesPage')
+        .get();
+      
+      final docs = snapshot.docs;
+
+      setState(() {
+        resources = docs.map((doc) {
+          final data = doc.data();
+          return {
+            'title': data['title'].toString(),
+            'description': data['description'].toString(),
+            'url': data['url'].toString(),
+          };
+        }).toList();
+      });
+    } catch (e) {
+      print('Error fetching resources');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context)!;
-
-    final List<Map<String, String>> resources = [
-      {
-        'title': localizations.resources,
-        'description': localizations.resourceCardDescription,
-        'url': 'https://www.thetrevorproject.org/resources/',
-      },
-      {
-        'title': localizations.research,
-        'description': localizations.resarchDescription,
-        'url': 'https://www.thetrevorproject.org/research-briefs/',
-      },
-      {
-        'title': localizations.breathing,
-        'description': localizations.breathingDescription,
-        'url': 'https://www.thetrevorproject.org/breathing-exercise/',
-      },
-      {
-        'title': localizations.blogs,
-        'description': localizations.blogsDescription,
-        'url': 'https://www.thetrevorproject.org/blog/',
-      },
-  ];
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -161,7 +172,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
             })
           ],
         ),
-      )
+      ),
     );
   }
 }
