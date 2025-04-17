@@ -8,6 +8,10 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import android.view.WindowManager
+import com.genesys.cloud.messenger.sdk.*
+import com.genesys.cloud.messenger.sdk.model.ChatLoadResponse
+
+
 
 class MainAlias
 class TrevorAlias
@@ -42,11 +46,35 @@ class MainActivity : FlutterActivity() {
                     
                     switchAppIcon(useTrevorIcon)
                     result.success(null)
+                } else if (call.method == "getChat"){
+                    Log.d(TAG, "Getting messaging")
                 } else {
                     Log.d(TAG, "Method not implemented: ${call.method}")
                     result.notImplemented()
                 }
             }
+    
+    }
+
+    private fun getChat(){
+        val deploymentId = "8e2f80aa-2cb5-4f54-a764-b638e075531f"
+        val domain = "https://apps.mypurecloud.com"
+        
+        val messengerAccount = MessengerAccount(deploymentId, domain).apply {
+            logging = true
+        }
+
+        val chatController = ChatController.Builder(context).build(account, object : ChatLoadedListener {
+            override fun onComplete(result: ChatLoadResponse) {
+            result.error?.let {
+                Log.d(TAG, "Chat failed to load")
+            } ?: let {
+                // add result.fragment to your activity.
+                supportFragmentManager.beginTransaction().replace(R.id.chat_container, result.fragment, tag).commit()
+            }
+    }
+})
+
     }
 
     private fun switchAppIcon(useTrevorIcon: Boolean) {

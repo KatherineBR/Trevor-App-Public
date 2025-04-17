@@ -25,7 +25,6 @@ void main() async {
   Messaging message_handler = Messaging();
   message_handler.main_messaging();
 
-
   runApp(const MyApp());
 }
 

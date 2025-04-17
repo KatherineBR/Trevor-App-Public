@@ -4,6 +4,7 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+
 }
 
 android {
@@ -52,5 +53,9 @@ dependencies {
   // TODO: Add the dependencies for Firebase products you want to use
   // When using the BoM, don't specify versions in Firebase dependencies
   implementation("com.google.firebase:firebase-firestore")
+
+  implementation ("com.genesys.cloud:core:1.12.0")
+  implementation ("com.genesys.cloud:chatintegration:1.12.0")
+  implementation ("com.genesys.cloud:ui:1.12.0")
 
 }
