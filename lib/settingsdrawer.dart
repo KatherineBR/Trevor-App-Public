@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'webview_controller.dart';
 import 'theme.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'switch_icon.dart';
 
