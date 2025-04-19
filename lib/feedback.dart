@@ -36,8 +36,9 @@ class _MyWidgetState extends State<FeedbackApp> {
           'communicationsFormQuestion3': formState._selectedRating.where((isSelected) => isSelected).length,
         };
 
-        sendData(formData);
-        // print('Communication Form Data: $formData');
+        await sendData(formData);
+        // Reset form after submission
+        formState.resetForm();
       }
     } else {
       // App form is active
@@ -57,14 +58,15 @@ class _MyWidgetState extends State<FeedbackApp> {
           'appFormQuestion2': formState._selectedRating.where((isSelected) => isSelected).length,
         };
 
-        sendData(formData);
-        // print('App Form Data: $formData');
+        await sendData(formData);
+        // Reset form after submission
+        formState.resetForm();
       }
     }
 
   }
 
-  void sendData(formData) async {
+  Future<void> sendData(formData) async {
     if(formData){
       try {
         await FirebaseFirestore.instance
@@ -186,6 +188,18 @@ class _CommunicationFeedbackFormState extends State<CommunicationFeedbackForm> {
   final communicationsFormQuestion1 = TextEditingController();
   final communicationsFormQuestion2 = TextEditingController();
 
+  // Method to reset form fields
+  void resetForm() {
+    communicationsFormQuestion1.clear();
+    communicationsFormQuestion2.clear();
+    setState(() {
+      // Reset 0-10 scale to all false
+      for (int i = 0; i < _selectedRating.length; i++) {
+        _selectedRating[i] = false;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -276,6 +290,17 @@ class AppFeedbackForm extends StatefulWidget {
 class _AppFeedbackFormState extends State<AppFeedbackForm> {
   final List<bool> _selectedRating = List.generate(5, (_) => false);
   final appFormQuestion1 = TextEditingController();
+
+  // Method to reset form fields
+  void resetForm() {
+    appFormQuestion1.clear();
+    setState(() {
+      // Reset 0-10 scale to all false
+      for (int i = 0; i < _selectedRating.length; i++) {
+        _selectedRating[i] = false;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
