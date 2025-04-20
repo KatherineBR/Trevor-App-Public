@@ -36,5 +36,6 @@
   "app" : "App",
   "contactUs" : "Contact us",
   "theme" : "Theme",
-  "icon" : "Icon"
+  "icon" : "Icon",
+  "resourcePage" : "resourcePage"
 }

@@ -67,22 +67,20 @@ class _MyWidgetState extends State<FeedbackApp> {
   }
 
   Future<void> sendData(formData) async {
-    if(formData){
-      try {
-        await FirebaseFirestore.instance
-          .collection('conversationFeedback')
-          .add(formData);
+    try {
+      await FirebaseFirestore.instance
+        .collection('conversationFeedback')
+        .add(formData);
 
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Feedback submitted. Thank you!'))
-        );
-      } catch (error) {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error submitting feedback: $error'))
-        );
-      }
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Feedback submitted. Thank you!'))
+      );
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error submitting feedback: $error'))
+      );
     }
   }
 

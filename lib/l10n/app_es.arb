@@ -38,5 +38,6 @@
   "resourceCardDescription" : "Una colección de recursos útiles.",
   "contactUs" : "Contáctanos",
   "theme" : "Tema",
-  "icon" : "Icono"
+  "icon" : "Icono",
+  "resourcePage" : "resourcePageSpanish"
 }

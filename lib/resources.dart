@@ -113,9 +113,12 @@ class _ResourcesPageState extends State<ResourcesPage> {
   }
 
   Future<void> _fetchResources() async {
+    final localizations = AppLocalizations.of(context);
     try {
+      String resourcesPage = localizations!.resourcePage;
+      print("Check resources page: $resourcesPage");
       final snapshot = await FirebaseFirestore.instance
-        .collection('resourcesPage')
+        .collection(resourcesPage)
         .get();
       
       final docs = snapshot.docs;
