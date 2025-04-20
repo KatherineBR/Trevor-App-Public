@@ -32,7 +32,7 @@ class _MyWidgetState extends State<FeedbackApp> {
         // Get all form data
         final Map<String, dynamic>  formData = {
           'communicationsFormQuestion1': formState.communicationsFormQuestion1.text,
-          'communicationsFormQuestion2': formState.communicationsFormQuestion2.text,
+          'communicationsFormQuestion2': formState.selectedCommAnswer ?? 0,
           'communicationsFormQuestion3': formState._selectedRating.where((isSelected) => isSelected).length,
         };
 
@@ -184,17 +184,31 @@ class CommunicationFeedbackForm extends StatefulWidget {
 class _CommunicationFeedbackFormState extends State<CommunicationFeedbackForm> {
   final List<bool> _selectedRating = List.generate(10, (_) => false);
   final communicationsFormQuestion1 = TextEditingController();
-  final communicationsFormQuestion2 = TextEditingController();
+
+  List<bool> _selectedCommOption = [false, false, false];
+  final List<String> _commOptions = ["Better", "Same", "Worse"];
+
+  // Map it so that Better -> 1, Same -> 2, Worse -> 3
+  int? get selectedCommAnswer {
+    for (int i = 0; i < _selectedCommOption.length; i++) {
+      if (_selectedCommOption[i]) {
+        return i + 1;
+      }
+    }
+    return null;
+  }
 
   // Method to reset form fields
   void resetForm() {
     communicationsFormQuestion1.clear();
-    communicationsFormQuestion2.clear();
+
     setState(() {
       // Reset 0-10 scale to all false
       for (int i = 0; i < _selectedRating.length; i++) {
         _selectedRating[i] = false;
       }
+      // Reset better/same/worse:
+      _selectedCommOption = [false, false, false];
     });
   }
 
@@ -216,17 +230,32 @@ class _CommunicationFeedbackFormState extends State<CommunicationFeedbackForm> {
         SizedBox(
           height: MediaQuery.of(context).size.width * 0.1,
         ),
-        TextFormField(
-          controller: communicationsFormQuestion2,
-          cursorColor: AppTheme.getButtonColor(context, index: 2),
-          decoration: AppTheme.getFormInputDecoration(
-            context,
-            localizations.communicationsFormQuestion2
+        Text(
+          localizations.communicationsFormQuestion2,
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: AppTheme.getButtonColor(context, index: 2),
+            ),
           ),
-           validator: (value) {
-            return null;
+        const SizedBox(height: 10),
+        // Togglebuttons for "Worse, Same, Better"
+        ToggleButtons(
+          onPressed: (int index) {
+            setState(() {
+              for (int i = 0; i < _selectedCommOption.length; i++) {
+                _selectedCommOption[i] = i == index;
+              }
+            });
           },
-          keyboardType: TextInputType.text,
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          selectedBorderColor: AppTheme.getButtonColor(context, index: 2).withAlpha(99),
+          selectedColor: Colors.white,
+          fillColor: AppTheme.getButtonColor(context, index: 2),
+          color: AppTheme.getButtonColor(context, index: 2),
+          constraints: const BoxConstraints(minHeight: 60.0, minWidth: 100.0),
+          isSelected: _selectedCommOption,
+          children: _commOptions
+              .map((option) => Text(option, style: const TextStyle(fontSize: 16)))
+              .toList(),
         ),
         SizedBox(
           height: MediaQuery.of(context).size.width * 0.1,
