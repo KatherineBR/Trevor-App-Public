@@ -125,12 +125,47 @@ class ArticlesPage extends StatefulWidget {
 
 class _ArticlesPageState extends State<ArticlesPage> {
   List<Map<String, dynamic>> articles = [];
+  List<Map<String, dynamic>> filteredArticles = []; // For search results
   bool _loading = true;
+  bool _isSearching = false;
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _fetchArticles();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterArticles(String query) {
+    if (query.isEmpty) {
+      setState(() {
+        filteredArticles = articles;
+      });
+      return;
+    }
+
+    setState(() {
+      filteredArticles =
+          articles
+              .where(
+                (article) =>
+                    article['title'].toString().toLowerCase().contains(
+                      query.toLowerCase(),
+                    ) ||
+                    (article['tags'] != null &&
+                        (article['tags'] as List<String>).any(
+                          (tag) =>
+                              tag.toLowerCase().contains(query.toLowerCase()),
+                        )),
+              )
+              .toList();
+    });
   }
 
   Future<void> _fetchArticles() async {
@@ -157,6 +192,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
                 'date': (data['date'] as Timestamp).toDate(),
               };
             }).toList();
+        filteredArticles = articles; // Initialize filtered articles
         _loading = false;
       });
     } catch (e) {
@@ -165,27 +201,71 @@ class _ArticlesPageState extends State<ArticlesPage> {
     }
   }
 
+  PreferredSizeWidget _buildAppBar() {
+    if (_isSearching) {
+      return AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            setState(() {
+              _isSearching = false;
+              _searchController.clear();
+              filteredArticles = articles;
+            });
+          },
+        ),
+        title: TextField(
+          controller: _searchController,
+          autofocus: true,
+          decoration: InputDecoration(
+            hintText: 'Search ${widget.category}...',
+            border: InputBorder.none,
+            hintStyle: TextStyle(color: Colors.grey[400]),
+          ),
+          style: const TextStyle(color: Colors.black, fontSize: 16),
+          onChanged: _filterArticles,
+        ),
+      );
+    }
+
+    return AppBar(
+      title: Text(widget.category),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.search),
+          onPressed: () {
+            setState(() {
+              _isSearching = true;
+            });
+          },
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.category)),
+      appBar: _buildAppBar(),
       body:
           _loading
               ? const Center(child: CircularProgressIndicator())
-              : articles.isEmpty
+              : filteredArticles.isEmpty
               ? Center(
                 child: Text(
-                  'No ${widget.category} available',
+                  _isSearching
+                      ? 'No results found'
+                      : 'No ${widget.category} available',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               )
               : ListView.separated(
                 padding: const EdgeInsets.all(16),
-                itemCount: articles.length,
+                itemCount: filteredArticles.length,
                 separatorBuilder:
                     (context, index) => const SizedBox(height: 16),
                 itemBuilder: (context, index) {
-                  final article = articles[index];
+                  final article = filteredArticles[index];
                   return ArticleCard(
                     title: article['title'],
                     author: article['author'],
