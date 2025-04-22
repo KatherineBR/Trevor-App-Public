@@ -6,6 +6,7 @@ import 'webview_controller.dart';
 import 'theme.dart';
 import 'locationservice.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'articles.dart';
 
 // Defines a custom stateless widget for resourcecard
 class ResourceCard extends StatelessWidget {
@@ -13,6 +14,13 @@ class ResourceCard extends StatelessWidget {
   final String title;
   final String description;
   final String url;
+
+  // List of categories that should route to the ArticlesPage
+  static const List<String> articleCategories = [
+    'Blogs',
+    'News Press',
+    'Research Briefs',
+  ];
 
   // Constructor for the resource card requiring the previously defined properties
   const ResourceCard({
@@ -24,14 +32,26 @@ class ResourceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isArticleCategory = articleCategories.contains(title);
+    final bool isBreathingExercises = title == 'Breathing Exercises';
+
     return SizedBox(
       height: 80,
       child: ElevatedButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => WebViewApp(url: url))
-          );
+          if (isArticleCategory) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ArticlesPage(category: title),
+              ),
+            );
+          } else if (isBreathingExercises || !isArticleCategory) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => WebViewApp(url: url)),
+            );
+          }
         },
         style: AppTheme.getLargeButtonStyle(context, colorIndex: 1),
         child: Align(
@@ -42,16 +62,18 @@ class ResourceCard extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Text(description,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.normal,
-              )),
+              Text(
+                description,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
             ],
           ),
         ),
@@ -69,12 +91,11 @@ class ResourcesPage extends StatefulWidget {
 }
 
 class _ResourcesPageState extends State<ResourcesPage> {
-
   String _countryCode = 'US';
   bool _loading = true;
   List<Map<String, String>> resources = [];
 
-    /*
+  /*
     'MX': {
       'Resources': 'https://www.thetrevorproject.mx/recursos/',
       'Research Briefs': 'https://www.thetrevorproject.org/research-briefs/',
@@ -114,21 +135,21 @@ class _ResourcesPageState extends State<ResourcesPage> {
 
   Future<void> _fetchResources() async {
     try {
-      final snapshot = await FirebaseFirestore.instance
-        .collection('resourcesPage')
-        .get();
-      
+      final snapshot =
+          await FirebaseFirestore.instance.collection('resourcesPage').get();
+
       final docs = snapshot.docs;
 
       setState(() {
-        resources = docs.map((doc) {
-          final data = doc.data();
-          return {
-            'title': data['title'].toString(),
-            'description': data['description'].toString(),
-            'url': data['url'].toString(),
-          };
-        }).toList();
+        resources =
+            docs.map((doc) {
+              final data = doc.data();
+              return {
+                'title': data['title'].toString(),
+                'description': data['description'].toString(),
+                'url': data['url'].toString(),
+              };
+            }).toList();
       });
     } catch (e) {
       print('Error fetching resources');
@@ -155,21 +176,21 @@ class _ResourcesPageState extends State<ResourcesPage> {
               style: theme.textTheme.bodyLarge,
             ),
             // spacing
-            SizedBox(height : 25),
+            SizedBox(height: 25),
             ...resources.map((resource) {
               // Creates a resourcecard for each item in the list
               return Column(
-                children : [
+                children: [
                   ResourceCard(
-                title: resource['title']!,
-                description: resource['description']!,
-                url: resource['url']!,
-                ),
-                // spacing between each card
+                    title: resource['title']!,
+                    description: resource['description']!,
+                    url: resource['url']!,
+                  ),
+                  // spacing between each card
                   SizedBox(height: 16),
                 ],
               );
-            })
+            }),
           ],
         ),
       ),
