@@ -3,6 +3,7 @@ import 'webview_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'theme.dart';
+import 'chat.dart';
 import 'locationservice.dart';
 
 // changed this class to include states
@@ -110,10 +111,7 @@ class _MyHomePageState extends State<MyHomePage>{
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            const WebViewApp(url: 'https://chat.trvr.org/'),
-                      ),
+                      MaterialPageRoute(builder: (context) => Chat()),
                     );
                   },
                   style:  AppTheme.getLargeButtonStyle(context, colorIndex: 1),

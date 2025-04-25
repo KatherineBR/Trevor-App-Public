@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 
 // Class that invokes a method on native side since flutter can't directly do this
 class AppIconSwitcher {
-  static const MethodChannel _channel = MethodChannel('com.trevor.app/icon');
+  static const MethodChannel _channel = MethodChannel('com.trevor.app/kotlin');
 
   // Switch icon
   static Future<void> switchAppIcon(bool useTrevorIcon) async {

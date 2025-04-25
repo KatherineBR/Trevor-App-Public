@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application") version "8.7.0"
-    id("com.google.gms.google-services")
     id("kotlin-android")
+    id("com.google.gms.google-services")    
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 
@@ -56,4 +56,5 @@ dependencies {
   implementation ("com.genesys.cloud:core:1.12.0")
   implementation ("com.genesys.cloud:chatintegration:1.12.0")
   implementation ("com.genesys.cloud:ui:1.12.0")
+
 }

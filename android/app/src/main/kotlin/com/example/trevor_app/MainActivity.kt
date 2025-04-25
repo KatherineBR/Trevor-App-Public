@@ -18,7 +18,7 @@ class TrevorAlias
 class MainActivity : FlutterActivity() {
 
     companion object {
-        private const val CHANNEL = "com.trevor.app/icon"
+        private const val CHANNEL = "com.trevor.app/kotlin"
         private const val TAG = "TrevorApp"
     }
 
