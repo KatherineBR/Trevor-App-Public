@@ -8,10 +8,9 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import android.view.WindowManager
-import com.genesys.cloud.messenger.sdk.*
-import com.genesys.cloud.messenger.sdk.model.ChatLoadResponse
-
-
+import androidx.appcompat.app.AppCompatActivity
+import com.genesys.cloud.integration.messenger.MessengerAccount
+import com.genesys.cloud.ui.structure.controller.*
 
 class MainAlias
 class TrevorAlias
@@ -59,22 +58,26 @@ class MainActivity : FlutterActivity() {
     private fun getChat(){
         val deploymentId = "8e2f80aa-2cb5-4f54-a764-b638e075531f"
         val domain = "https://apps.mypurecloud.com"
+        setContentView(R.layout.activity_chat)
+        val activity = context as? AppCompatActivity
         
         val messengerAccount = MessengerAccount(deploymentId, domain).apply {
             logging = true
         }
 
-        val chatController = ChatController.Builder(context).build(account, object : ChatLoadedListener {
+        val chatController = ChatController.Builder(this).build(messengerAccount, object : ChatLoadedListener {
             override fun onComplete(result: ChatLoadResponse) {
-            result.error?.let {
-                Log.d(TAG, "Chat failed to load")
-            } ?: let {
-                // add result.fragment to your activity.
-                supportFragmentManager.beginTransaction().replace(R.id.chat_container, result.fragment, tag).commit()
+                result.error?.let {
+                    Log.d(TAG, "Chat failed to load")
+                } ?: run {
+                    result.fragment?.let {
+                        activity?.supportFragmentManager?.beginTransaction()
+                            ?.replace(R.id.chat_container, it, TAG)
+                            ?.commit()
+                    }
+                }
             }
-    }
-})
-
+        })
     }
 
     private fun switchAppIcon(useTrevorIcon: Boolean) {
