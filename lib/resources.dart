@@ -88,6 +88,11 @@ class _ResourcesPageState extends State<ResourcesPage> {
     super.initState();
     // fetches the user's countrycode/location
     _initializeCountryCode();
+  }
+  
+  @override void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Now can call localizations
     _fetchResources(); // Fetch the resources from Firebase backend
   }
 
@@ -113,9 +118,12 @@ class _ResourcesPageState extends State<ResourcesPage> {
   }
 
   Future<void> _fetchResources() async {
+    final localizations = AppLocalizations.of(context);
     try {
+      String resourcesPage = localizations!.resourcePage;
+      print("Check resources page: $resourcesPage");
       final snapshot = await FirebaseFirestore.instance
-        .collection('resourcesPage')
+        .collection(resourcesPage)
         .get();
       
       final docs = snapshot.docs;
@@ -151,7 +159,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
             // First button
             SizedBox(height: 16),
             Text(
-              localizations.resourcesDecription,
+              localizations.resourcesDescription,
               style: theme.textTheme.bodyLarge,
             ),
             // spacing
