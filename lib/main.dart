@@ -18,6 +18,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  
   final fcmToken = await FirebaseMessaging.instance.getToken();
   FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   print("fcmToken is $fcmToken");

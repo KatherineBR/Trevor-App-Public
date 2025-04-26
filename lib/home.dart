@@ -108,11 +108,8 @@ class _MyHomePageState extends State<MyHomePage>{
                 height: 80,
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Chat()),
-                    );
+                  onPressed: () async {
+                    await Chat.getChat();
                   },
                   style:  AppTheme.getLargeButtonStyle(context, colorIndex: 1),
                   child: Text(localizations.chat),

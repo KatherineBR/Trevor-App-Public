@@ -47,6 +47,8 @@ class MainActivity : FlutterActivity() {
                     result.success(null)
                 } else if (call.method == "getChat"){
                     Log.d(TAG, "Getting messaging")
+                    getChat()
+                    result.success(null)
                 } else {
                     Log.d(TAG, "Method not implemented: ${call.method}")
                     result.notImplemented()
@@ -57,7 +59,7 @@ class MainActivity : FlutterActivity() {
 
     private fun getChat(){
         val deploymentId = "8e2f80aa-2cb5-4f54-a764-b638e075531f"
-        val domain = "https://apps.mypurecloud.com"
+        val domain = "mypurecloud.com"
         setContentView(R.layout.activity_chat)
         val activity = context as? AppCompatActivity
         
