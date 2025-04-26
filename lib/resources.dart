@@ -20,6 +20,7 @@ class ResourceCard extends StatelessWidget {
     'Blogs',
     'News Press',
     'Research Briefs',
+    'Resources',
   ];
 
   // Constructor for the resource card requiring the previously defined properties
