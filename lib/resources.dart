@@ -20,7 +20,7 @@ class ResourceCard extends StatelessWidget {
     'Blogs',
     'News Press',
     'Research Briefs',
-    'Resources',
+    'Resource Center',
   ];
 
   // Constructor for the resource card requiring the previously defined properties
@@ -35,12 +35,20 @@ class ResourceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isArticleCategory = articleCategories.contains(title);
     final bool isBreathingExercises = title == 'Breathing Exercises';
+    final bool isResources = title == 'Resources';
 
     return SizedBox(
       height: 80,
       child: ElevatedButton(
         onPressed: () {
-          if (isArticleCategory) {
+          if (isResources) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ArticlesPage(category: 'Resource Center'),
+              ),
+            );
+          } else if (isArticleCategory) {
             Navigator.push(
               context,
               MaterialPageRoute(
