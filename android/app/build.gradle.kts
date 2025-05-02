@@ -12,12 +12,12 @@ android {
     ndkVersion = "27.0.12077973" // Hard-coded this line to ensure compatability with url launcher + webchat packages
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = "17"
     }
 
     defaultConfig {
@@ -25,7 +25,7 @@ android {
         applicationId = "com.example.trevor_app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 21
+        minSdk = 29
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -46,7 +46,7 @@ flutter {
 
 dependencies {
   // Import the Firebase BoM
-  implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
+  implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
 
 
   // TODO: Add the dependencies for Firebase products you want to use
