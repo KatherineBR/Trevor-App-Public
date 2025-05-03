@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.content.ComponentName
 import android.content.pm.PackageManager
 import android.util.Log
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import android.view.WindowManager
@@ -15,7 +15,7 @@ import com.genesys.cloud.ui.structure.controller.*
 class MainAlias
 class TrevorAlias
 
-class MainActivity : FlutterActivity() {
+class MainActivity : FlutterFragmentActivity() {
 
     companion object {
         private const val CHANNEL = "com.trevor.app/kotlin"
@@ -59,9 +59,9 @@ class MainActivity : FlutterActivity() {
 
     private fun getChat(){
         val deploymentId = "8e2f80aa-2cb5-4f54-a764-b638e075531f"
-        val domain = "mypurecloud.com"
+        val domain = "usw2.pure.cloud"
         setContentView(R.layout.activity_chat)
-        val activity = context as? AppCompatActivity
+        val activity = this
         
         val messengerAccount = MessengerAccount(deploymentId, domain).apply {
             logging = true
@@ -73,7 +73,7 @@ class MainActivity : FlutterActivity() {
                     Log.d(TAG, "Chat failed to load")
                 } ?: run {
                     result.fragment?.let {
-                        activity?.supportFragmentManager?.beginTransaction()
+                        activity.supportFragmentManager?.beginTransaction()
                             ?.replace(R.id.chat_container, it, TAG)
                             ?.commit()
                     }
