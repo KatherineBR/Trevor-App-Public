@@ -8,6 +8,9 @@ import 'theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import "settingsdrawer.dart";
+import "package:firebase_messaging/firebase_messaging.dart";
+import "package:firebase_analytics/firebase_analytics.dart";
+import "messaging.dart";
 import 'package:shared_preferences/shared_preferences.dart';
 import 'switch_icon.dart';
 
@@ -16,7 +19,15 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  
+  final fcmToken = await FirebaseMessaging.instance.getToken();
+  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  print("fcmToken is $fcmToken");
 
+  Messaging message_handler = Messaging();
+  message_handler.main_messaging();
+
+  runApp(const MyApp());
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isDefaultTheme = prefs.getBool('isDefaultTheme') ?? true;
