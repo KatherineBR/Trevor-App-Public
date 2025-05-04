@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'webview_controller.dart';
@@ -92,6 +91,7 @@ class ResourcesPage extends StatefulWidget {
 class _ResourcesPageState extends State<ResourcesPage> {
   String _countryCode = 'US';
   bool _loading = true;
+  bool errorLoading = false;
   List<Map<String, String>> resources = [];
 
   @override
@@ -105,6 +105,11 @@ class _ResourcesPageState extends State<ResourcesPage> {
     super.didChangeDependencies();
     // Now can call localizations
     _fetchResources(); // Fetch the resources from Firebase backend
+    if(errorLoading){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: const Text('Error fetching resources!'),),
+      );
+    }
   }
 
   Future<void> _initializeCountryCode() async {
@@ -132,7 +137,6 @@ class _ResourcesPageState extends State<ResourcesPage> {
     final localizations = AppLocalizations.of(context);
     try {
       String resourcesPage = localizations!.resourcePage;
-      print("Check resources page: $resourcesPage");
       final snapshot = await FirebaseFirestore.instance
         .collection(resourcesPage)
         .get();
@@ -151,7 +155,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
             .toList();
     });
     } catch (e) {
-      print('Error fetching resources');
+      errorLoading = true;
     }
   }
 

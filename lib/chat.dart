@@ -10,11 +10,11 @@ class Chat {
   static Future<void> getChat() async {
     try {
       final countryCode = _countryCodeService.countryCode.value;
-      print('countryCode is $countryCode');
-      print("Launching chat");
+      // print('countryCode is $countryCode');
+      // print("Launching chat");
       await countryCode == "US" ? _channel.invokeMethod('getChatUS'): _channel.invokeMethod('getChatMX');
     } on PlatformException catch (e) {
-      print("Error opening chat: ${e.message}");
+      // print("Error opening chat: ${e.message}");
     }
   }
 }

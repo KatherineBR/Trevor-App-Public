@@ -4,7 +4,7 @@ class Messaging {
 
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  void main_messaging() async {
+  void mainMessaging() async {
 
     NotificationSettings settings = await messaging.requestPermission(
     alert: true,

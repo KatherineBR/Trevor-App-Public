@@ -25,10 +25,10 @@ void main() async {
   FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   print("fcmToken is $fcmToken");
 
-  Messaging message_handler = Messaging();
-  message_handler.main_messaging();
-  CountryCodeService _countryCodeService = CountryCodeService();
-  await _countryCodeService.initialize();
+  Messaging messageHandler = Messaging();
+  messageHandler.mainMessaging();
+  CountryCodeService countryCodeService = CountryCodeService();
+  await countryCodeService.initialize();
 
   runApp(const MyApp());
 
