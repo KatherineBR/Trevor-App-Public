@@ -11,13 +11,14 @@ import "settingsdrawer.dart";
 import "package:firebase_messaging/firebase_messaging.dart";
 import "package:firebase_analytics/firebase_analytics.dart";
 import "messaging.dart";
+import 'package:shared_preferences/shared_preferences.dart';
+import 'switch_icon.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   
   final fcmToken = await FirebaseMessaging.instance.getToken();
   FirebaseAnalytics analytics = FirebaseAnalytics.instance;
@@ -27,23 +28,54 @@ void main() async {
   message_handler.main_messaging();
 
   runApp(const MyApp());
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool isDefaultTheme = prefs.getBool('isDefaultTheme') ?? true;
+  bool iconSwitched = prefs.getBool('iconSwitched') ?? true;
+  runApp(MyApp(initialTheme: isDefaultTheme, iconSwitched: iconSwitched));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  final bool initialTheme;
+  final bool iconSwitched;
+  const MyApp({super.key, this.initialTheme = true, this.iconSwitched = true});
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  bool _useAlternativeTheme = false;
+  late bool isDefaultTheme;
+  late bool _iconSwitched;
+  // Initialize the theme state with the value passed from the constructor
+  // This makes sure the app starts with the saved theme from SharedPreferences
+  @override
+  void initState() {
+    super.initState();
+    isDefaultTheme = widget.initialTheme;
+    _iconSwitched = widget.iconSwitched;
+  }
+
+  Future<void> _saveThemePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isDefaultTheme', isDefaultTheme);
+    await prefs.setBool('iconSwitched', _iconSwitched);
+  }
+
+  void _toggleTheme() {
+    setState(() {
+      isDefaultTheme = !isDefaultTheme;
+      _iconSwitched = !_iconSwitched;
+      AppIconSwitcher.switchAppIcon(_iconSwitched);
+      _saveThemePreference();
+    });
+  }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: _useAlternativeTheme ? AppTheme.getAlternativeTheme() : AppTheme.getTheme()  ,
+      theme: isDefaultTheme ? AppTheme.getTheme() : AppTheme.getAlternativeTheme(),
       // loads localized resources
       localizationsDelegates: [
         AppLocalizations.delegate,
@@ -57,20 +89,22 @@ class _MyAppState extends State<MyApp> {
         Locale('es', 'MX'), // Spanish
       ],
       home: HomeScreen(
-        onThemeChanged: (bool useDefault) {
-          setState(() {
-            _useAlternativeTheme = useDefault;
-          });
-        },
+        isDefaultTheme: isDefaultTheme,
+        toggleTheme: _toggleTheme,
       ),
     );
   }
 }
 
 class HomeScreen extends StatefulWidget {
-  final Function(bool)? onThemeChanged;
+  final bool isDefaultTheme;
+  final VoidCallback toggleTheme;
 
-  const HomeScreen({super.key, this.onThemeChanged});
+  const HomeScreen({
+      super.key,
+      required this.isDefaultTheme,
+      required this.toggleTheme
+    });
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -97,6 +131,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
 
+    // Get the current theme color and check if it's the default theme
+    final defaultThemeColor = AppTheme.getTheme().primaryColor;
+    final isUsingDefaultTheme = Theme.of(context).primaryColor == defaultThemeColor;
+
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -109,11 +147,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       endDrawer: SettingsDrawer(
-        onThemeChanged: (bool value) {
-          if (widget.onThemeChanged != null) {
-            widget.onThemeChanged!(value);
-          }
-        },
+        isDefaultTheme: isUsingDefaultTheme,
+        onThemeChanged: (_) => widget.toggleTheme(),
       ),
       body: Column(
         children: [

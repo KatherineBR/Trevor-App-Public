@@ -9,16 +9,13 @@
   "feedback" : "Comentario",
   "feedbackDescriptionApp" : "¡Queremos saber de ti! Tómate un momento para compartir tus pensamientos sobre la aplicación. Sus comentarios son importantes para nosotros y nos ayudarán a mejorar la aplicación para todos.",
   "feedbackDescriptionCommunications" : "Gracias por comunicarte y hablar con uno de nuestros consejerxs hoy. Por favor, completa esta breve encuesta para contarnos sobre tu experiencia. Tus respuestas serán confidenciales y utilizaremos esta información para mejorar la calidad de nuestro servicio.",
-  "communicationsFormQuestion1" : "¿Cómo te sientes?",
-  "communicationsFormQuestion2" : "¿Hay algo que te gustaría compartir?",
-  "communicationsFormQuestion3" : "Del 1 al 10, ¿cómo calificarías a tu consejerx?",
   "appFormQuestion1" : "¿Cómo estás disfrutando de esta aplicación?",
   "appFormQuestion2" : "Califícanos de 1 a 5 estrellas",
   "homeDescription" : "Tener dudas sobre tu identidad de género u orientación sexual es normal. Si sientes ansiedad, miedo o has pensado en hacerte daño, escríbenos. Es gratuito y confidencial.",
-  "resourcesDecription" : "En esta sección, encontrarás recursos útiles para apoyar tu bienestar y conectar con la comunidad LGBTQ+. Explora ejercicios de respiración, investigaciones, noticias y oportunidades para involucrarte. Toca cualquier recurso para obtener más información en nuestro sitio web.",
+  "resourcesDescription" : "En esta sección, encontrarás recursos útiles para apoyar tu bienestar y conectar con la comunidad LGBTQ+. Explora ejercicios de respiración, investigaciones, noticias y oportunidades para involucrarte. Toca cualquier recurso para obtener más información en nuestro sitio web.",
   "communicationsFormQuestion1" : "¿Esta conversación fue de ayuda para ti?",
-  "communicationsFormQuestion2" : "¿Cómo te sientes después de esta conversación?",
-  "communicationsFormQuestion3": "TBD",
+  "communicationsFormQuestion2" : "Ahora que terminó esta conversación, ¿cómo te sientes?",
+  "communicationsFormQuestion3": "¿Cuál es tu nivel de malestar después de esta conversación? En escala del 0 al 10, siendo 0 \"muy bajo\" y 10 \"muy alto\"",
   "communicationsFormDescription" : "Gracias por comunicarte y hablar con uno de nuestros consejerxs hoy. Por favor, completa esta breve encuesta para contarnos sobre tu experiencia. Tus respuestas serán confidenciales y utilizaremos esta información para mejorar la calidad de nuestro servicio.",
   "yes" : "Si",
   "no" : "No",
@@ -38,5 +35,6 @@
   "resourceCardDescription" : "Una colección de recursos útiles.",
   "contactUs" : "Contáctanos",
   "theme" : "Tema",
-  "icon" : "Icono"
+  "icon" : "Icono",
+  "resourcePage" : "resourcesPageSpanish"
 }
