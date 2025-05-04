@@ -4,7 +4,6 @@ class LocationService {
   static Future<String> getUserCountry() async {
     // Check Location Permission
     LocationPermission permission = await Geolocator.checkPermission();
-    print("Reaches getUesrCount");
     // If permission for location is denied, ask with a pop up if they want to give permission
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -15,7 +14,7 @@ class LocationService {
     }
     // if permission is denied forever
     if (permission == LocationPermission.deniedForever) {
-      print("Denied forever");
+      //print("Denied forever");
       return 'US';
     }
 

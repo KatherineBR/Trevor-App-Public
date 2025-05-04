@@ -16,14 +16,14 @@ class Messaging {
     sound: true,
   );
 
-    print('User granted permission: ${settings.authorizationStatus}');
+    //print('User granted permission: ${settings.authorizationStatus}');
 
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
 
   @pragma('vm:entry-point')
   Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    print("Handling a background message: ${message.messageId}");
+    //print("Handling a background message: ${message.messageId}");
   }
 
 
