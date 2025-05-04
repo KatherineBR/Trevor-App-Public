@@ -13,6 +13,7 @@ import "package:firebase_analytics/firebase_analytics.dart";
 import "messaging.dart";
 import 'package:shared_preferences/shared_preferences.dart';
 import 'switch_icon.dart';
+import 'countrycodeservice.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +27,8 @@ void main() async {
 
   Messaging message_handler = Messaging();
   message_handler.main_messaging();
+  CountryCodeService _countryCodeService = CountryCodeService();
+  await _countryCodeService.initialize();
 
   runApp(const MyApp());
 
