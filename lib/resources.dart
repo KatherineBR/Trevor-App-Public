@@ -18,7 +18,6 @@ class ResourceCard extends StatelessWidget {
   // List of categories that should route to the ArticlesPage
   static const List<String> articleCategories = [
     'Blogs',
-    'News Press',
     'Research Briefs',
     'Resource Center',
   ];
@@ -34,28 +33,19 @@ class ResourceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isArticleCategory = articleCategories.contains(title);
-    final bool isBreathingExercises = title == 'Breathing Exercises';
-    final bool isResources = title == 'Resources';
 
     return SizedBox(
       height: 80,
       child: ElevatedButton(
         onPressed: () {
-          if (isResources) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ArticlesPage(category: 'Resource Center'),
-              ),
-            );
-          } else if (isArticleCategory) {
+          if (isArticleCategory) {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => ArticlesPage(category: title),
               ),
             );
-          } else if (isBreathingExercises || !isArticleCategory) {
+          } else {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => WebViewApp(url: url)),
@@ -104,15 +94,6 @@ class _ResourcesPageState extends State<ResourcesPage> {
   bool _loading = true;
   List<Map<String, String>> resources = [];
 
-  /*
-    'MX': {
-      'Resources': 'https://www.thetrevorproject.mx/recursos/',
-      'Research Briefs': 'https://www.thetrevorproject.org/research-briefs/',
-      'Breathing Exercises': 'https://www.thetrevorproject.org/breathing-exercise/',
-      'Blogs': 'https://www.thetrevorproject.org/blog/',
-    },
-    */
-
   @override
   void initState() {
     super.initState();
@@ -159,16 +140,16 @@ class _ResourcesPageState extends State<ResourcesPage> {
       final docs = snapshot.docs;
 
       setState(() {
-        resources =
-            docs.map((doc) {
-              final data = doc.data();
-              return {
-                'title': data['title'].toString(),
-                'description': data['description'].toString(),
-                'url': data['url'].toString(),
-              };
-            }).toList();
-      });
+        resources = docs
+            .map((doc) => doc.data())
+            .where((data) => data['title'] != null)
+            .map((data) => {
+                  'title': data['title'].toString(),
+                  'description': data['description'].toString(),
+                  'url': data['url'].toString(),
+                })
+            .toList();
+    });
     } catch (e) {
       print('Error fetching resources');
     }
