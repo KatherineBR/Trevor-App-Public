@@ -41,7 +41,7 @@ void main() async {
 class MyApp extends StatefulWidget {
   final bool initialTheme;
   final bool iconSwitched;
-  const MyApp({super.key, this.initialTheme = true, this.iconSwitched = true});
+  const MyApp({super.key, this.initialTheme = true, this.iconSwitched = false});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -55,8 +55,22 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    isDefaultTheme = widget.initialTheme;
-    _iconSwitched = widget.iconSwitched;
+    _loadThemePreference();
+  }
+
+  Future<void> _loadThemePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // If prefs dont exist, use the default from widget and save them
+    if (!prefs.containsKey('isDefaultTheme') || !prefs.containsKey('iconSwitched')) {
+      isDefaultTheme = widget.initialTheme;
+      _iconSwitched = widget.iconSwitched;
+      await _saveThemePreference(); // Save default values for next launch
+    } else {
+      // Load saved preferences
+      isDefaultTheme = prefs.getBool('isDefaultTheme') ?? widget.initialTheme;
+      _iconSwitched = prefs.getBool('iconSwitched') ?? widget.iconSwitched;
+    }
   }
 
   Future<void> _saveThemePreference() async {
