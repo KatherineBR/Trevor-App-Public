@@ -36,7 +36,7 @@ class _MyWidgetState extends State<FeedbackApp> {
           'communicationsFormQuestion3': formState._selectedRating.where((isSelected) => isSelected).length,
         };
 
-        await sendData(formData);
+        await sendCoversationFeedbackData(formData);
         // Reset form after submission
         formState.resetForm();
       }
@@ -58,7 +58,7 @@ class _MyWidgetState extends State<FeedbackApp> {
           'appFormQuestion2': formState._selectedRating.where((isSelected) => isSelected).length,
         };
 
-        await sendData(formData);
+        await sendAppFeedbackData(formData);
         // Reset form after submission
         formState.resetForm();
       }
@@ -66,7 +66,7 @@ class _MyWidgetState extends State<FeedbackApp> {
 
   }
 
-  Future<void> sendData(formData) async {
+  Future<void> sendCoversationFeedbackData(formData) async {
     try {
       await FirebaseFirestore.instance
         .collection('conversationFeedback')
@@ -74,7 +74,25 @@ class _MyWidgetState extends State<FeedbackApp> {
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Feedback submitted. Thank you!'))
+      SnackBar(content: Text('Conversation feedback submitted. Thank you!'))
+      );
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error submitting feedback: $error'))
+      );
+    }
+  }
+
+  Future<void> sendAppFeedbackData(formData) async {
+    try {
+      await FirebaseFirestore.instance
+        .collection('appFeedback')
+        .add(formData);
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('App feedback submitted. Thank you!'))
       );
     } catch (error) {
       if (!mounted) return;
