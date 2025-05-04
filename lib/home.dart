@@ -4,7 +4,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'theme.dart';
 import 'chat.dart';
-import 'locationservice.dart';
+// import 'locationservice.dart';
+import 'countrycodeservice.dart';
 
 // changed this class to include states
 class MyHomePage extends StatefulWidget {
@@ -16,8 +17,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage>{
-  // the two elements in this state
-  String _countryCode = 'US'; // default country code is set to US
+  final _countryCodeService = CountryCodeService();
   bool _loading = true;
 
   // map that holds the two different urls with the country codes as the keys
@@ -26,34 +26,21 @@ class _MyHomePageState extends State<MyHomePage>{
     'MX': 'http://chat.trvr.mx/',
   };
 
-  // initstate method called when state object is inserted into the widget
-  // tree for the first time, allowing initialization of country code before
-  // the widget is built.
-  @override
-  void initState() {
-    super.initState();
-    _initializeCountryCode();
-  }
+   // initstate method called when state object is inserted into the widget
+   // tree for the first time, allowing initialization of country code before
+   // the widget is built.
+   @override
+   void initState() {
+     super.initState();
+     _initializeCountryCode();
+   }
 
-  // tries to get the device's countrycode by calling on the getUserCountry
-  // function in the Location service file
+  // tries to get the device's countrycode by calling on the countryCodeService file
   Future<void> _initializeCountryCode() async {
-    try {
-      final code = await LocationService.getUserCountry();
-      debugPrint("Success! Country Code: $code");
-      setState(() {
-        _countryCode = code;
-        _loading = false;
-      });
-    }
-    // if there is an error, the default countrycode is US
-    catch (error) {
-      debugPrint("Location error: $error. Defaulting to US.");
-      setState(() {
-        _countryCode = 'US';
-        _loading = false;
-      });
-    }
+    await _countryCodeService.initialize();
+    setState(() {
+      _loading = false;
+    });
   }
 
   Future<void> sendSMS(String phoneNumber) async {
@@ -89,6 +76,7 @@ class _MyHomePageState extends State<MyHomePage>{
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final _countryCode = _countryCodeService.countryCode.value; 
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -108,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage>{
                 height: 80,
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () async {
+                  onPressed: _loading ? null : () async {
                     await Chat.getChat();
                   },
                   style:  AppTheme.getLargeButtonStyle(context, colorIndex: 1),

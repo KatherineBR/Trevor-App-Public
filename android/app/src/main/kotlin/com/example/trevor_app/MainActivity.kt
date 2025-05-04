@@ -45,9 +45,13 @@ class MainActivity : FlutterFragmentActivity() {
                     
                     switchAppIcon(useTrevorIcon)
                     result.success(null)
-                } else if (call.method == "getChat"){
+                } else if (call.method == "getChatUS"){
                     Log.d(TAG, "Getting messaging")
-                    getChat()
+                    getChatUS()
+                    result.success(null)
+                } else if (call.method == "getChatMX"){
+                    Log.d(TAG, "Getting messaging")
+                    getChatMX()
                     result.success(null)
                 } else {
                     Log.d(TAG, "Method not implemented: ${call.method}")
@@ -57,8 +61,33 @@ class MainActivity : FlutterFragmentActivity() {
     
     }
 
-    private fun getChat(){
+    // COPY PASTE THIS FUNCTION SO THAT THERE IS MEXICO 
+    private fun getChatUS(){
         val deploymentId = "8e2f80aa-2cb5-4f54-a764-b638e075531f"
+        val domain = "usw2.pure.cloud"
+        setContentView(R.layout.activity_chat)
+        val activity = this
+        
+        val messengerAccount = MessengerAccount(deploymentId, domain).apply {
+            logging = true
+        }
+
+        val chatController = ChatController.Builder(this).build(messengerAccount, object : ChatLoadedListener {
+            override fun onComplete(result: ChatLoadResponse) {
+                result.error?.let {
+                    Log.d(TAG, "Chat failed to load")
+                } ?: run {
+                    result.fragment?.let {
+                        activity.supportFragmentManager?.beginTransaction()
+                            ?.replace(R.id.chat_container, it, TAG)
+                            ?.commit()
+                    }
+                }
+            }
+        })
+    }
+    private fun getChatMX(){
+        val deploymentId = "08685bd0-dbf1-42d4-bbf9-36e758310409"
         val domain = "usw2.pure.cloud"
         setContentView(R.layout.activity_chat)
         val activity = this
