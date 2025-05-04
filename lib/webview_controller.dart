@@ -1,3 +1,4 @@
+import 'dart:io'; // This detects whe platform
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -45,6 +46,17 @@ class _WebViewAppState extends State<WebViewApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: Platform.isIOS // Only show a leave-webview bar if on iOS
+        ? AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () {
+                Navigator.of(context).pop(); // Exit web view controller
+              },
+            ),
+            title: Text('WebView'),
+          )
+        : null,
       body: WebViewWidget(
         controller: controller,
       ),
