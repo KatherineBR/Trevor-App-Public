@@ -104,35 +104,35 @@ class _MyHomePageState extends State<MyHomePage>{
                 ),
               ),
               const SizedBox(height: 25),
+                SizedBox(
+                  height: 80,
+                  child: ElevatedButton(
+                    onPressed: () => _countryCode == 'MX' ? openWhatsApp('+525592253337') : sendSMS('sms:+18664887386'),
+                    style:  AppTheme.getLargeButtonStyle(context, colorIndex: 1),
+                    child: Text(localizations.text),
+                  ),
+                ),
+                const SizedBox(height: 25),
               if (_countryCode != 'MX')
-                  SizedBox(
-                    height: 80,
-                    child: ElevatedButton(
-                      onPressed: () => sendSMS('sms:+18664887386'),
-                      style:  AppTheme.getLargeButtonStyle(context, colorIndex: 1),
-                      child: Text(localizations.text),
-                    ),
-                  ),
-                  const SizedBox(height: 25),
-                  SizedBox(
-                    height: 80,
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () => openCallApp('+18664887386'),
-                      style:  AppTheme.getLargeButtonStyle(context, colorIndex: 1),
-                      child: Text(localizations.call),
-                    ),
-                  ),
-              if (_countryCode == 'MX')
                 SizedBox(
                   height: 80,
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () => openWhatsApp('+525592253337'),
-                    style:  AppTheme.getLargeButtonStyle(context, colorIndex: 2),
-                    child: Text(localizations.text),
+                    onPressed: () => openCallApp('+18664887386'),
+                    style:  AppTheme.getLargeButtonStyle(context, colorIndex: 1),
+                    child: Text(localizations.call),
                   ),
                 ),
+              // if (_countryCode == 'MX')
+              //   SizedBox(
+              //     height: 80,
+              //     width: double.infinity,
+              //     child: ElevatedButton(
+              //       onPressed: () => openWhatsApp('+525592253337'),
+              //       style:  AppTheme.getLargeButtonStyle(context, colorIndex: 2),
+              //       child: Text(localizations.text),
+              //     ),
+              //   ),
               const SizedBox(height: 25),
             ],
           ),
