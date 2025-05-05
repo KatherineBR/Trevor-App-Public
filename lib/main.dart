@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'home.dart';
 import 'feedback.dart';
+import 'locationservice.dart';
 import 'resources.dart';
 import 'theme.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -25,12 +26,14 @@ void main() async {
   FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   print("fcmToken is $fcmToken");
 
+  // First: request location permission
+  String country = await LocationService.getUserCountry(); //CALLS A PERMISSION
+
+  // Then: request notification permission
   Messaging messageHandler = Messaging();
-  messageHandler.mainMessaging();
+  await messageHandler.mainMessaging(); //CALLS A PERMISSION
   CountryCodeService countryCodeService = CountryCodeService();
   await countryCodeService.initialize();
-
-  runApp(const MyApp());
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isDefaultTheme = prefs.getBool('isDefaultTheme') ?? true;
@@ -48,8 +51,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late bool isDefaultTheme;
-  late bool _iconSwitched;
+  late bool isDefaultTheme = true;
+  late bool _iconSwitched = false;
   // Initialize the theme state with the value passed from the constructor
   // This makes sure the app starts with the saved theme from SharedPreferences
   @override
