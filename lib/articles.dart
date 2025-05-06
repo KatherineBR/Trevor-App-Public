@@ -170,11 +170,51 @@ class _ArticlesPageState extends State<ArticlesPage> {
 
   Future<void> _fetchArticles() async {
     try {
-      final snapshot =
-          await FirebaseFirestore.instance
-              .collection(widget.category)
-              .orderBy('date', descending: true)
-              .get();
+      QuerySnapshot<Map<String, dynamic>> snapshot;
+      if (widget.category == 'Blogs') {
+        // Fetch from subcollection 'articles' inside 'resourcesPage/Blogs'
+        snapshot =
+            await FirebaseFirestore.instance
+                .collection('resourcesPage')
+                .doc('Blogs')
+                .collection('articles')
+                .orderBy('date', descending: true)
+                .get();
+      } else if (widget.category == 'Research Briefs') {
+        // Fetch from subcollection 'articles' inside 'resourcesPage/Research Briefs'
+        snapshot =
+            await FirebaseFirestore.instance
+                .collection('resourcesPage')
+                .doc('Research Briefs')
+                .collection('articles')
+                .orderBy('date', descending: true)
+                .get();
+      } else if (widget.category == 'Resource Center') {
+        // Fetch from subcollection 'articles' inside 'resourcesPage/Resource Center'
+        snapshot =
+            await FirebaseFirestore.instance
+                .collection('resourcesPage')
+                .doc('Resource Center')
+                .collection('articles')
+                .orderBy('date', descending: true)
+                .get();
+      } else if (widget.category == 'SpanishResources') {
+        // Fetch from subcollection 'articles' inside 'resourcesPage/Resource Center'
+        snapshot =
+            await FirebaseFirestore.instance
+                .collection('resourcesPage')
+                .doc('SpanishResources')
+                .collection('articles')
+                .orderBy('date', descending: true)
+                .get();
+      } else {
+        // Existing logic for other categories (update as needed for new structure later)
+        snapshot =
+            await FirebaseFirestore.instance
+                .collection(widget.category)
+                .orderBy('date', descending: true)
+                .get();
+      }
 
       setState(() {
         articles =
@@ -184,6 +224,10 @@ class _ArticlesPageState extends State<ArticlesPage> {
                 'title': data['title'] as String,
                 'author': data['author'] as String?,
                 'imageUrl': data['imageUrl'] as String?,
+                'categories':
+                    data['categories'] != null
+                        ? List<String>.from(data['categories'] as List)
+                        : null,
                 'tags':
                     data['tags'] != null
                         ? List<String>.from(data['tags'] as List)
@@ -259,6 +303,8 @@ class _ArticlesPageState extends State<ArticlesPage> {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               )
+              : widget.category == 'Resource Center'
+              ? _buildResourceCenterSections()
               : ListView.separated(
                 padding: const EdgeInsets.all(16),
                 itemCount: filteredArticles.length,
@@ -277,6 +323,56 @@ class _ArticlesPageState extends State<ArticlesPage> {
                   );
                 },
               ),
+    );
+  }
+
+  Widget _buildResourceCenterSections() {
+    // Collect all unique categories
+    final Set<String> allCategories = {};
+    for (final article in filteredArticles) {
+      final List<String>? cats = article['categories'] as List<String>?;
+      if (cats != null) {
+        allCategories.addAll(cats);
+      }
+    }
+    final List<String> sortedCategories = allCategories.toList()..sort();
+
+    // For each category, list articles that have that category
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        for (final category in sortedCategories) ...[
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Text(
+              category,
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+          ),
+          ...filteredArticles
+              .where(
+                (article) =>
+                    (article['categories'] as List<String>?)?.contains(
+                      category,
+                    ) ??
+                    false,
+              )
+              .map(
+                (article) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: ArticleCard(
+                    title: article['title'],
+                    author: article['author'],
+                    imageUrl: article['imageUrl'],
+                    tags: article['tags'],
+                    url: article['url'],
+                    date: article['date'],
+                    category: widget.category,
+                  ),
+                ),
+              ),
+        ],
+      ],
     );
   }
 }

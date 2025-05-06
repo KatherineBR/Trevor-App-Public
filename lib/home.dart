@@ -16,7 +16,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>{
+class _MyHomePageState extends State<MyHomePage> {
   final _countryCodeService = CountryCodeService();
   bool _loading = true;
 
@@ -26,14 +26,14 @@ class _MyHomePageState extends State<MyHomePage>{
     'MX': 'http://chat.trvr.mx/',
   };
 
-   // initstate method called when state object is inserted into the widget
-   // tree for the first time, allowing initialization of country code before
-   // the widget is built.
-   @override
-   void initState() {
-     super.initState();
-     _initializeCountryCode();
-   }
+  // initstate method called when state object is inserted into the widget
+  // tree for the first time, allowing initialization of country code before
+  // the widget is built.
+  @override
+  void initState() {
+    super.initState();
+    _initializeCountryCode();
+  }
 
   // tries to get the device's countrycode by calling on the countryCodeService file
   Future<void> _initializeCountryCode() async {
@@ -44,7 +44,9 @@ class _MyHomePageState extends State<MyHomePage>{
   }
 
   Future<void> sendSMS(String phoneNumber) async {
-    final Uri smsUri = Uri.parse('sms:$phoneNumber'); // `sms:` opens the messaging app
+    final Uri smsUri = Uri.parse(
+      'sms:$phoneNumber',
+    ); // `sms:` opens the messaging app
     if (await canLaunchUrl(smsUri)) {
       await launchUrl(smsUri);
     } else {
@@ -53,10 +55,7 @@ class _MyHomePageState extends State<MyHomePage>{
   }
 
   Future<void> openCallApp(String phoneNumber) async {
-    final Uri telUri = Uri(
-      scheme: 'tel',
-      path: phoneNumber,
-    );
+    final Uri telUri = Uri(scheme: 'tel', path: phoneNumber);
     if (await canLaunchUrl(telUri)) {
       await launchUrl(telUri);
     } else {
@@ -72,11 +71,12 @@ class _MyHomePageState extends State<MyHomePage>{
       debugPrint('Could not launch WhatsApp. Make sure WhatsApp is installed.');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final _countryCode = _countryCodeService.countryCode.value; 
+    final _countryCode = _countryCodeService.countryCode.value;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -96,30 +96,37 @@ class _MyHomePageState extends State<MyHomePage>{
                 height: 80,
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _loading ? null : () async {
-                    await Chat.getChat();
-                  },
-                  style:  AppTheme.getLargeButtonStyle(context, colorIndex: 1),
+                  onPressed:
+                      _loading
+                          ? null
+                          : () async {
+                            await Chat.getChat();
+                          },
+                  style: AppTheme.getLargeButtonStyle(context, colorIndex: 1),
                   child: Text(localizations.chat),
                 ),
               ),
               const SizedBox(height: 25),
-                SizedBox(
-                  height: 80,
-                  child: ElevatedButton(
-                    onPressed: () => _countryCode == 'MX' ? openWhatsApp('+525592253337') : sendSMS('sms:+18664887386'),
-                    style:  AppTheme.getLargeButtonStyle(context, colorIndex: 1),
-                    child: Text(localizations.text),
-                  ),
+              SizedBox(
+                height: 80,
+                child: ElevatedButton(
+                  onPressed:
+                      () =>
+                          _countryCode == 'MX'
+                              ? openWhatsApp('+525592253337')
+                              : sendSMS('sms:+18664887386'),
+                  style: AppTheme.getLargeButtonStyle(context, colorIndex: 1),
+                  child: Text(localizations.text),
                 ),
-                const SizedBox(height: 25),
+              ),
+              const SizedBox(height: 25),
               if (_countryCode != 'MX')
                 SizedBox(
                   height: 80,
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () => openCallApp('+18664887386'),
-                    style:  AppTheme.getLargeButtonStyle(context, colorIndex: 1),
+                    style: AppTheme.getLargeButtonStyle(context, colorIndex: 1),
                     child: Text(localizations.call),
                   ),
                 ),

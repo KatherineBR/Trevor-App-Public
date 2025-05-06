@@ -3,13 +3,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:trevor_app/theme.dart';
 
-
-
 const List<Widget> feedbackTypes = <Widget>[
   Text('Communication', style: TextStyle(fontSize: 12)),
-  Text('App', style: TextStyle(fontSize: 12))
+  Text('App', style: TextStyle(fontSize: 12)),
 ];
-
 
 class FeedbackApp extends StatefulWidget {
   const FeedbackApp({super.key});
@@ -19,7 +16,6 @@ class FeedbackApp extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<FeedbackApp> {
-
   final List<bool> _selectedFeedbackType = <bool>[true, false];
   final _communicationFormKey = GlobalKey<_CommunicationFeedbackFormState>();
   final _appFormKey = GlobalKey<_AppFeedbackFormState>();
@@ -30,10 +26,14 @@ class _MyWidgetState extends State<FeedbackApp> {
       final formState = _communicationFormKey.currentState;
       if (formState != null) {
         // Get all form data
-        final Map<String, dynamic>  formData = {
-          'communicationsFormQuestion1': formState.communicationsFormQuestion1.text,
+        final Map<String, dynamic> formData = {
+          'communicationsFormQuestion1':
+              formState.communicationsFormQuestion1.text,
           'communicationsFormQuestion2': formState.selectedCommAnswer ?? 0,
-          'communicationsFormQuestion3': formState._selectedRating.where((isSelected) => isSelected).length,
+          'communicationsFormQuestion3':
+              formState._selectedRating
+                  .where((isSelected) => isSelected)
+                  .length,
         };
 
         await sendCoversationFeedbackData(formData);
@@ -45,17 +45,21 @@ class _MyWidgetState extends State<FeedbackApp> {
       final formState = _appFormKey.currentState;
       // if appFormquestinon2 is not answered it will be 0 so invalidate
       if (formState != null) {
-        var rating = formState._selectedRating.where((isSelected) => isSelected).length;
+        var rating =
+            formState._selectedRating.where((isSelected) => isSelected).length;
         if (rating == 0) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Please give us a rating'))
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Please give us a rating')));
           return;
         }
 
-        final Map<String, dynamic>  formData = {
+        final Map<String, dynamic> formData = {
           'appFormQuestion1': formState.appFormQuestion1.text,
-          'appFormQuestion2': formState._selectedRating.where((isSelected) => isSelected).length,
+          'appFormQuestion2':
+              formState._selectedRating
+                  .where((isSelected) => isSelected)
+                  .length,
         };
 
         await sendAppFeedbackData(formData);
@@ -63,119 +67,113 @@ class _MyWidgetState extends State<FeedbackApp> {
         formState.resetForm();
       }
     }
-
   }
 
   Future<void> sendCoversationFeedbackData(formData) async {
     try {
       await FirebaseFirestore.instance
-        .collection('conversationFeedback')
-        .add(formData);
+          .collection('conversationFeedback')
+          .add(formData);
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Conversation feedback submitted. Thank you!'))
+        SnackBar(content: Text('Conversation feedback submitted. Thank you!')),
       );
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error submitting feedback: $error'))
+        SnackBar(content: Text('Error submitting feedback: $error')),
       );
     }
   }
 
   Future<void> sendAppFeedbackData(formData) async {
     try {
-      await FirebaseFirestore.instance
-        .collection('appFeedback')
-        .add(formData);
+      await FirebaseFirestore.instance.collection('appFeedback').add(formData);
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('App feedback submitted. Thank you!'))
+        SnackBar(content: Text('App feedback submitted. Thank you!')),
       );
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error submitting feedback: $error'))
+        SnackBar(content: Text('Error submitting feedback: $error')),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-  final ThemeData theme = Theme.of(context);
-  final localizations = AppLocalizations.of(context)!;
+    final ThemeData theme = Theme.of(context);
+    final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 40),
-          child: Column(
+        padding: EdgeInsets.symmetric(horizontal: 40),
+        child: Column(
           children: <Widget>[
             Text(localizations.feedback, style: theme.textTheme.displayLarge),
             SizedBox(height: 16),
             Text(
-               _selectedFeedbackType[0]
-              ? localizations.feedbackDescriptionCommunications
-              : localizations.feedbackDescriptionApp,
+              _selectedFeedbackType[0]
+                  ? localizations.feedbackDescriptionCommunications
+                  : localizations.feedbackDescriptionApp,
               style: theme.textTheme.bodyLarge,
             ),
-              const SizedBox(height: 25),
-              ToggleButtons(
-                onPressed: (int index) {
-                  setState(() {
-                    // The button that is tapped is set to true, and the others to false.
-                    for (int i = 0; i < _selectedFeedbackType.length; i++) {
-                      _selectedFeedbackType[i] = i == index;
-                    }
-                  });
-                },
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-                selectedBorderColor: AppTheme.getButtonColor(context, index: 2),
-                selectedColor: Colors.white,
-                fillColor: AppTheme.getButtonColor(context, index: 2),
-                color: AppTheme.getButtonColor(context, index: 2),
-                constraints: const BoxConstraints(
-                  minHeight: 60.0,
-                  minWidth: 100.0),
-                isSelected: _selectedFeedbackType,
-                children:
-                 <Widget>[
-                  Text(localizations.communication, style: TextStyle(fontSize: 12)),
-                  Text(localizations.app, style: TextStyle(fontSize: 12))
-                ],
+            const SizedBox(height: 25),
+            ToggleButtons(
+              onPressed: (int index) {
+                setState(() {
+                  // The button that is tapped is set to true, and the others to false.
+                  for (int i = 0; i < _selectedFeedbackType.length; i++) {
+                    _selectedFeedbackType[i] = i == index;
+                  }
+                });
+              },
+              borderRadius: const BorderRadius.all(Radius.circular(8)),
+              selectedBorderColor: AppTheme.getButtonColor(context, index: 2),
+              selectedColor: Colors.white,
+              fillColor: AppTheme.getButtonColor(context, index: 2),
+              color: AppTheme.getButtonColor(context, index: 2),
+              constraints: const BoxConstraints(
+                minHeight: 60.0,
+                minWidth: 100.0,
               ),
-                  SizedBox(
-                      height: MediaQuery.of(context).size.width * 0.1,
-                  ),
-          // Show either Communication or App form based on selection
-          _selectedFeedbackType[0]
-              ? CommunicationFeedbackForm(key: _communicationFormKey)
-              : AppFeedbackForm(key: _appFormKey),
-            // submit button
-             ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all(Colors.green),
+              isSelected: _selectedFeedbackType,
+              children: <Widget>[
+                Text(
+                  localizations.communication,
+                  style: TextStyle(fontSize: 12),
                 ),
-                child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                        localizations.submit,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                        ),
-                    ),
-                ),
-                onPressed: () => _submit(),
+                Text(localizations.app, style: TextStyle(fontSize: 12)),
+              ],
             ),
-          ]
-        )
+            SizedBox(height: MediaQuery.of(context).size.width * 0.1),
+            // Show either Communication or App form based on selection
+            _selectedFeedbackType[0]
+                ? CommunicationFeedbackForm(key: _communicationFormKey)
+                : AppFeedbackForm(key: _appFormKey),
+            // submit button
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all(Colors.green),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  localizations.submit,
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
+              onPressed: () => _submit(),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
-
 
 const List<Widget> ratingsCommunication = <Widget>[
   Text('1'),
@@ -189,11 +187,13 @@ const List<Widget> ratingsCommunication = <Widget>[
   Text('9'),
   Text('10'),
 ];
+
 class CommunicationFeedbackForm extends StatefulWidget {
   const CommunicationFeedbackForm({super.key});
 
   @override
-  State<CommunicationFeedbackForm> createState() => _CommunicationFeedbackFormState();
+  State<CommunicationFeedbackForm> createState() =>
+      _CommunicationFeedbackFormState();
 }
 
 /*
@@ -204,7 +204,6 @@ class _CommunicationFeedbackFormState extends State<CommunicationFeedbackForm> {
   final communicationsFormQuestion1 = TextEditingController();
 
   List<bool> _selectedCommOption = [false, false, false];
-  final List<String> _commOptions = ["Better", "Same", "Worse"];
 
   // Map it so that Better -> 1, Same -> 2, Worse -> 3
   int? get selectedCommAnswer {
@@ -234,6 +233,11 @@ class _CommunicationFeedbackFormState extends State<CommunicationFeedbackForm> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final localizations = AppLocalizations.of(context)!;
+    final List<String> commOptions = [
+      localizations.better,
+      localizations.same,
+      localizations.worse,
+    ];
     return Column(
       children: [
         TextFormField(
@@ -241,19 +245,17 @@ class _CommunicationFeedbackFormState extends State<CommunicationFeedbackForm> {
           cursorColor: AppTheme.getButtonColor(context, index: 2),
           decoration: AppTheme.getFormInputDecoration(
             context,
-            localizations.communicationsFormQuestion1
+            localizations.communicationsFormQuestion1,
           ),
           keyboardType: TextInputType.text,
         ),
-        SizedBox(
-          height: MediaQuery.of(context).size.width * 0.1,
-        ),
+        SizedBox(height: MediaQuery.of(context).size.width * 0.1),
         Text(
           localizations.communicationsFormQuestion2,
           style: theme.textTheme.titleMedium?.copyWith(
             color: AppTheme.getButtonColor(context, index: 2),
-            ),
           ),
+        ),
         const SizedBox(height: 10),
         // Togglebuttons for "Worse, Same, Better"
         ToggleButtons(
@@ -265,22 +267,30 @@ class _CommunicationFeedbackFormState extends State<CommunicationFeedbackForm> {
             });
           },
           borderRadius: const BorderRadius.all(Radius.circular(8)),
-          selectedBorderColor: AppTheme.getButtonColor(context, index: 2).withAlpha(99),
+          selectedBorderColor: AppTheme.getButtonColor(
+            context,
+            index: 2,
+          ).withAlpha(99),
           selectedColor: Colors.white,
           fillColor: AppTheme.getButtonColor(context, index: 2),
           color: AppTheme.getButtonColor(context, index: 2),
           constraints: const BoxConstraints(minHeight: 60.0, minWidth: 100.0),
           isSelected: _selectedCommOption,
-          children: _commOptions
-              .map((option) => Text(option, style: const TextStyle(fontSize: 16)))
-              .toList(),
+          children:
+              commOptions
+                  .map(
+                    (option) =>
+                        Text(option, style: const TextStyle(fontSize: 16)),
+                  )
+                  .toList(),
         ),
-        SizedBox(
-          height: MediaQuery.of(context).size.width * 0.1,
+        SizedBox(height: MediaQuery.of(context).size.width * 0.1),
+        Text(
+          localizations.communicationsFormQuestion3,
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: AppTheme.getButtonColor(context, index: 2),
+          ),
         ),
-        Text(localizations.communicationsFormQuestion3, style: theme.textTheme.titleMedium?.copyWith(
-          color: AppTheme.getButtonColor(context, index: 2),
-        )),
         const SizedBox(height: 5),
         ToggleButtons(
           onPressed: (int index) {
@@ -292,24 +302,22 @@ class _CommunicationFeedbackFormState extends State<CommunicationFeedbackForm> {
             });
           },
           borderRadius: const BorderRadius.all(Radius.circular(8)),
-          selectedBorderColor: AppTheme.getButtonColor(context, index: 2).withAlpha(99),
+          selectedBorderColor: AppTheme.getButtonColor(
+            context,
+            index: 2,
+          ).withAlpha(99),
           selectedColor: Colors.white,
-          fillColor:AppTheme.getButtonColor(context, index: 2),
+          fillColor: AppTheme.getButtonColor(context, index: 2),
           color: AppTheme.getButtonColor(context, index: 2),
-          constraints: const BoxConstraints(
-            minHeight: 60.0,
-            minWidth: 30.0),
+          constraints: const BoxConstraints(minHeight: 60.0, minWidth: 30.0),
           isSelected: _selectedRating,
           children: ratingsCommunication,
         ),
-        SizedBox(
-          height: MediaQuery.of(context).size.width * 0.1,
-        ),
+        SizedBox(height: MediaQuery.of(context).size.width * 0.1),
       ],
     );
   }
 }
-
 
 /*
 
@@ -362,12 +370,13 @@ class _AppFeedbackFormState extends State<AppFeedbackForm> {
           ),
           keyboardType: TextInputType.text,
         ),
-        SizedBox(
-          height: MediaQuery.of(context).size.width * 0.1,
+        SizedBox(height: MediaQuery.of(context).size.width * 0.1),
+        Text(
+          local.appFormQuestion2,
+          style: theme.textTheme.titleSmall?.copyWith(
+            color: AppTheme.getButtonColor(context, index: 2),
+          ),
         ),
-        Text(local.appFormQuestion2, style: theme.textTheme.titleSmall?.copyWith(
-          color : AppTheme.getButtonColor(context, index: 2)
-        )),
         const SizedBox(height: 5),
         ToggleButtons(
           onPressed: (int index) {
@@ -379,21 +388,19 @@ class _AppFeedbackFormState extends State<AppFeedbackForm> {
             });
           },
           borderRadius: const BorderRadius.all(Radius.circular(8)),
-          selectedBorderColor: AppTheme.getButtonColor(context, index: 2).withAlpha(99),
+          selectedBorderColor: AppTheme.getButtonColor(
+            context,
+            index: 2,
+          ).withAlpha(99),
           selectedColor: Colors.white,
           fillColor: AppTheme.getButtonColor(context, index: 2),
           color: AppTheme.getButtonColor(context, index: 2),
-          constraints: const BoxConstraints(
-            minHeight: 60.0,
-            minWidth: 40.0),
+          constraints: const BoxConstraints(minHeight: 60.0, minWidth: 40.0),
           isSelected: _selectedRating,
           children: ratingsApp,
         ),
-        SizedBox(
-          height: MediaQuery.of(context).size.width * 0.1,
-        ),
+        SizedBox(height: MediaQuery.of(context).size.width * 0.1),
       ],
     );
   }
 }
-
