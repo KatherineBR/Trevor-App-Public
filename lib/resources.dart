@@ -93,6 +93,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
   bool _loading = true;
   bool errorLoading = false;
   List<Map<String, String>> resources = [];
+  List<Map<String, dynamic>> spanishArticles = [];
 
   @override
   void initState() {
@@ -100,32 +101,31 @@ class _ResourcesPageState extends State<ResourcesPage> {
     // fetches the user's countrycode/location
     _initializeCountryCode();
   }
-  
-  @override void didChangeDependencies() {
+
+  @override
+  void didChangeDependencies() {
     super.didChangeDependencies();
-    // Now can call localizations
-    _fetchResources(); // Fetch the resources from Firebase backend
-    if(errorLoading){
+    final locale = Localizations.localeOf(context);
+    if (locale.languageCode == 'es') {
+      _fetchSpanishArticles();
+    } else {
+      _fetchResources(); // Fetch the resources from Firebase backend
+    }
+    if (errorLoading) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: const Text('Error fetching resources!'),),
+        SnackBar(content: const Text('Error fetching resources!')),
       );
     }
   }
 
   Future<void> _initializeCountryCode() async {
-    // tries to get the device's countrycode by calling on the getUserCountry
-    // function in the Location service file
     try {
       final code = await LocationService.getUserCountry();
-      debugPrint("Success! Country Code: $code");
       setState(() {
         _countryCode = code;
         _loading = false;
       });
-    }
-    // if there is an error, uses US as the default countryCode.
-    catch (error) {
-      debugPrint("Location error: $error. Defaulting to US.");
+    } catch (error) {
       setState(() {
         _countryCode = 'US';
         _loading = false;
@@ -133,27 +133,56 @@ class _ResourcesPageState extends State<ResourcesPage> {
     }
   }
 
+  Future<void> _fetchSpanishArticles() async {
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance
+              .collection('resourcesPage')
+              .doc('SpanishResources')
+              .collection('articles')
+              .orderBy('date', descending: true)
+              .get();
+      setState(() {
+        spanishArticles =
+            snapshot.docs.map((doc) {
+              final data = doc.data();
+              return {
+                'title': data['title'] as String,
+                'imageUrl': data['imageUrl'] as String?,
+                'url': data['url'] as String,
+                'date': (data['date'] as Timestamp).toDate(),
+                'topic': data['topic'] as String?,
+              };
+            }).toList();
+      });
+    } catch (e) {
+      errorLoading = true;
+    }
+  }
+
   Future<void> _fetchResources() async {
     final localizations = AppLocalizations.of(context);
     try {
       String resourcesPage = localizations!.resourcePage;
-      final snapshot = await FirebaseFirestore.instance
-        .collection(resourcesPage)
-        .get();
-      
+      final snapshot =
+          await FirebaseFirestore.instance.collection(resourcesPage).get();
+
       final docs = snapshot.docs;
 
       setState(() {
-        resources = docs
-            .map((doc) => doc.data())
-            .where((data) => data['title'] != null)
-            .map((data) => {
-                  'title': data['title'].toString(),
-                  'description': data['description'].toString(),
-                  'url': data['url'].toString(),
-                })
-            .toList();
-    });
+        resources =
+            docs
+                .map((doc) => doc.data())
+                .where((data) => data['title'] != null)
+                .map(
+                  (data) => {
+                    'title': data['title'].toString(),
+                    'description': data['description'].toString(),
+                    'url': data['url'].toString(),
+                  },
+                )
+                .toList();
+      });
     } catch (e) {
       errorLoading = true;
     }
@@ -163,6 +192,54 @@ class _ResourcesPageState extends State<ResourcesPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context);
+
+    if (_loading) {
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (locale.languageCode == 'es' && spanishArticles.isNotEmpty) {
+      // Group Spanish articles by topic
+      final Map<String, List<Map<String, dynamic>>> articlesByTopic = {};
+      for (final article in spanishArticles) {
+        final topic = article['topic'] ?? 'Otros';
+        if (!articlesByTopic.containsKey(topic)) {
+          articlesByTopic[topic] = [];
+        }
+        articlesByTopic[topic]!.add(article);
+      }
+      final sortedTopics = articlesByTopic.keys.toList()..sort();
+
+      return Scaffold(
+        body: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
+          children: [
+            Text('Recursos en Español', style: theme.textTheme.displayLarge),
+            const SizedBox(height: 16),
+            for (final topic in sortedTopics) ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: Text(topic, style: theme.textTheme.headlineSmall),
+              ),
+              ...articlesByTopic[topic]!.map(
+                (article) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: ArticleCard(
+                    title: article['title'],
+                    author: null,
+                    imageUrl: article['imageUrl'],
+                    tags: null,
+                    url: article['url'],
+                    date: article['date'],
+                    category: 'SpanishResources',
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      );
+    }
 
     return Scaffold(
       body: SingleChildScrollView(

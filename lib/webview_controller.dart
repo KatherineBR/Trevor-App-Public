@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewApp extends StatefulWidget {
-  final String url; // Accepts a URL as a parameter
+  final String url;
 
   const WebViewApp({super.key, required this.url});
 
@@ -22,25 +22,16 @@ class _WebViewAppState extends State<WebViewApp> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onNavigationRequest: (NavigationRequest request) {
-          // This logs all URLs the WebView is trying to load
             debugPrint('Attempting to navigate to: ${request.url}');
-
-            // Block or allow navigation here
-            if (request.url.startsWith('https')) {
-              return NavigationDecision.navigate;
-            } else {
-              /* This is blocking the redirects to http://google.com that come from fallback of 
-              The Trevor Project's third-party scripts, embedded forms, trackers, etc. when they don't load */
-              return NavigationDecision.prevent;
-            }
+            // Allow all navigation requests
+            return NavigationDecision.navigate;
           },
-
           onWebResourceError: (WebResourceError error) {
             debugPrint("WebView error: ${error.description}");
           },
         ),
       )
-      ..loadRequest(Uri.parse(widget.url)); // Use the passed URL
+      ..loadRequest(Uri.parse(widget.url));
   }
 
   @override
