@@ -123,16 +123,6 @@ class _MyHomePageState extends State<MyHomePage>{
                     child: Text(localizations.call),
                   ),
                 ),
-              // if (_countryCode == 'MX')
-              //   SizedBox(
-              //     height: 80,
-              //     width: double.infinity,
-              //     child: ElevatedButton(
-              //       onPressed: () => openWhatsApp('+525592253337'),
-              //       style:  AppTheme.getLargeButtonStyle(context, colorIndex: 2),
-              //       child: Text(localizations.text),
-              //     ),
-              //   ),
               const SizedBox(height: 25),
             ],
           ),

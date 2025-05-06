@@ -37,63 +37,57 @@ void main() async {
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isDefaultTheme = prefs.getBool('isDefaultTheme') ?? true;
-  bool iconSwitched = prefs.getBool('iconSwitched') ?? true;
-  runApp(MyApp(initialTheme: isDefaultTheme, iconSwitched: iconSwitched));
+  bool isTrevorIcon = prefs.getBool('isTrevorIcon') ?? false;
+  runApp(MyApp(initIsDefaultTheme: isDefaultTheme, initIsTrevorIcon: isTrevorIcon));
 }
 
 class MyApp extends StatefulWidget {
-  final bool initialTheme;
-  final bool iconSwitched;
-  const MyApp({super.key, this.initialTheme = true, this.iconSwitched = false});
+  final bool initIsDefaultTheme;
+  final bool initIsTrevorIcon;
+  const MyApp({super.key, this.initIsDefaultTheme = true, this.initIsTrevorIcon = false});
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  late bool isDefaultTheme = true;
-  late bool _iconSwitched = false;
+  late bool isDefaultTheme = widget.initIsDefaultTheme;
+  late bool isTrevorIcon = widget.initIsTrevorIcon;
+  bool isLoading = true;
   // Initialize the theme state with the value passed from the constructor
   // This makes sure the app starts with the saved theme from SharedPreferences
   @override
   void initState() {
     super.initState();
-    _loadThemePreference();
-  }
-
-  Future<void> _loadThemePreference() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    // If prefs dont exist, use the default from widget and save them
-    if (!prefs.containsKey('isDefaultTheme') || !prefs.containsKey('iconSwitched')) {
-      isDefaultTheme = widget.initialTheme;
-      _iconSwitched = widget.iconSwitched;
-      await _saveThemePreference(); // Save default values for next launch
-    } else {
-      // Load saved preferences
-      isDefaultTheme = prefs.getBool('isDefaultTheme') ?? widget.initialTheme;
-      _iconSwitched = prefs.getBool('iconSwitched') ?? widget.iconSwitched;
-    }
   }
 
   Future<void> _saveThemePreference() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isDefaultTheme', isDefaultTheme);
-    await prefs.setBool('iconSwitched', _iconSwitched);
+    await prefs.setBool('isTrevorIcon', isTrevorIcon);
   }
 
   void _toggleTheme() {
-    setState(() {
-      isDefaultTheme = !isDefaultTheme;
-      _iconSwitched = !_iconSwitched;
-      AppIconSwitcher.switchAppIcon(_iconSwitched);
-      _saveThemePreference();
-    });
+      setState(() {
+        isDefaultTheme = !isDefaultTheme;
+        isTrevorIcon = !isTrevorIcon;
+        AppIconSwitcher.switchAppIcon(isTrevorIcon);
+        _saveThemePreference();
+      });
   }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // if (isLoading) {
+    //   return MaterialApp(
+    //     home: Scaffold(
+    //       body: Center(
+    //         child: CircularProgressIndicator(),
+    //       ),
+    //     ),
+    //   );
+    // }
     return MaterialApp(
       theme: isDefaultTheme ? AppTheme.getTheme() : AppTheme.getAlternativeTheme(),
       // loads localized resources
