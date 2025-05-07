@@ -19,6 +19,7 @@ class ResourceCard extends StatelessWidget {
     'Blogs',
     'Research Briefs',
     'Resource Center',
+    'SpanishResources',
   ];
 
   // Constructor for the resource card requiring the previously defined properties
@@ -115,7 +116,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
     }
     if (errorLoading) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: const Text('Error fetching resources!')),
+        const SnackBar(content: Text('Error fetching resources!')),
       );
     }
   }
@@ -200,6 +201,10 @@ class _ResourcesPageState extends State<ResourcesPage> {
       return Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
+    if(locale.languageCode == 'es' && !spanishArticles.isNotEmpty){
+      //TODO: put something that says no resources found
+    }
+
     if (locale.languageCode == 'es' && spanishArticles.isNotEmpty) {
       // Group Spanish articles by topic
       final Map<String, List<Map<String, dynamic>>> articlesByTopic = {};
@@ -230,7 +235,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
                     title: article['title'],
                     author: null,
                     imageUrl: article['imageUrl'],
-                    tags: null,
+                    categories: null,
                     url: article['url'],
                     date: article['date'],
                     category: 'SpanishResources',
@@ -245,20 +250,20 @@ class _ResourcesPageState extends State<ResourcesPage> {
 
     return Scaffold(
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 40),
+        padding: const EdgeInsets.symmetric(horizontal: 40),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Margin
             Text(localizations.resources, style: theme.textTheme.displayLarge),
             // First button
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               localizations.resourcesDescription,
               style: theme.textTheme.bodyLarge,
             ),
             // spacing
-            SizedBox(height: 25),
+            const SizedBox(height: 25),
             ...resources.map((resource) {
               // Creates a resourcecard for each item in the list
               return Column(
@@ -269,7 +274,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
                     url: resource['url']!,
                   ),
                   // spacing between each card
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                 ],
               );
             }),
