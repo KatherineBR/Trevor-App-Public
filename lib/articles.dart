@@ -14,6 +14,7 @@ class ArticleCard extends StatelessWidget {
   final List<String>? categories;
   final String url;
   final String date;
+  // final DateFormat dateUnformatted;
   final String category;
 
   const ArticleCard({
@@ -24,6 +25,7 @@ class ArticleCard extends StatelessWidget {
     this.categories,
     required this.url,
     required this.date,
+    // required this.dateUnformatted,
     required this.category,
   });
 
@@ -264,7 +266,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
           .collection('resourcesPage')
           .doc(widget.category)
           .collection('articles')
-          .orderBy('date', descending: true)
+          .orderBy('date_unformatted', descending: true)
           .get();
 
       // Check if widget is still mounted before calling setState

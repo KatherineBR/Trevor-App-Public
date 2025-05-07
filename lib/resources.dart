@@ -143,7 +143,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
               .collection('resourcesPage')
               .doc('SpanishResources')
               .collection('articles')
-              .orderBy('date', descending: true)
+              .orderBy('date_unformatted', descending: true)
               .get();
       setState(() {
         spanishArticles =
