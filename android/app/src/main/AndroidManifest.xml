@@ -96,5 +96,12 @@
             <action android:name="android.intent.action.VIEW" />
             <data android:scheme="sms" />
         </intent>
+
+        <!--Necessary for whatsapp functionality. -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="whatsapp" />
+        </intent>
+
     </queries>
 </manifest>
