@@ -45,14 +45,12 @@ class MainActivity : FlutterFragmentActivity() {
                     }
                     "getChatUS" -> {
                         Log.d(TAG, "Launching US chat")
-                        val token = call.argument<String>("token")
-                        launchChat("8e2f80aa-2cb5-4f54-a764-b638e075531f", "usw2.pure.cloud", token)
+                        launchChat("8e2f80aa-2cb5-4f54-a764-b638e075531f", "usw2.pure.cloud")
                         result.success(null)
                     }
                     "getChatMX" -> {
                         Log.d(TAG, "Launching MX chat")
-                        val token = call.argument<String>("token")
-                        launchChat("08685bd0-dbf1-42d4-bbf9-36e758310409", "usw2.pure.cloud", token)
+                        launchChat("08685bd0-dbf1-42d4-bbf9-36e758310409", "usw2.pure.cloud")
                         result.success(null)
                     }
                     else -> {
@@ -63,11 +61,10 @@ class MainActivity : FlutterFragmentActivity() {
             }
     }
 
-    private fun launchChat(deploymentId: String, domain: String, token: String?) {
+    private fun launchChat(deploymentId: String, domain: String) {
         val intent = Intent(this, ChatActivity::class.java).apply {
             putExtra("deploymentId", deploymentId)
             putExtra("domain", domain)
-            putExtra("fcmToken", token)
             // These flags ensure proper activity stack management
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }

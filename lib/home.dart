@@ -10,8 +10,7 @@ import 'dart:io' show Platform;
 
 // changed this class to include states
 class MyHomePage extends StatefulWidget {
-  final String? fcmToken;
-  const MyHomePage({super.key, required this.fcmToken});
+  const MyHomePage({super.key});
 
   // creates the state for the page page
   @override
@@ -21,7 +20,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final _countryCodeService = CountryCodeService();
   bool _loading = true;
-  late String? fcmToken;
 
   // map that holds the two different urls with the country codes as the keys
   Map<String, String> chatUrl = {
@@ -35,7 +33,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    fcmToken = widget.fcmToken;
     _initializeCountryCode();
   }
 
@@ -116,7 +113,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           ? null
                           : () async {
                             Chat chat = Chat();        // Singleton instance
-                            chat.init(fcmToken);
                             chat.getChat();
                           },
                   style: AppTheme.getLargeButtonStyle(context, colorIndex: 1),
