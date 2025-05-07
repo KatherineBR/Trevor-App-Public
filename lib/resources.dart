@@ -234,7 +234,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
                   child: ArticleCard(
                     title: article['title'],
                     author: null,
-                    imageUrl: article['imageUrl'],
+                    photo: article['imageUrl'],
                     categories: null,
                     url: article['url'],
                     date: article['date'],

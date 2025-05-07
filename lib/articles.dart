@@ -10,7 +10,7 @@ Map spanishCategoryMap = {16: 'aliadx', 20: 'amigxs', 23: 'autoconocimiento', 25
 class ArticleCard extends StatelessWidget {
   final String title;
   final String? author;
-  final String? imageUrl;
+  final String? photo;
   final List<String>? categories;
   final String url;
   final DateTime date;
@@ -20,7 +20,7 @@ class ArticleCard extends StatelessWidget {
     super.key,
     required this.title,
     this.author,
-    this.imageUrl,
+    this.photo,
     this.categories,
     required this.url,
     required this.date,
@@ -48,11 +48,11 @@ class ArticleCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Image on the left - only show for Blogs and Resources
-              if (imageUrl != null && category != 'Research Briefs') ...[
+              if (photo != null && category != 'Research Briefs') ...[
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
                   child: Image.network(
-                    imageUrl!,
+                    photo!,
                     width: 120,
                     height: 120,
                     fit: BoxFit.cover,
@@ -277,7 +277,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
               return {
                 'title': data['title'] as String,
                 'author': data['author'] as String?,
-                'imageUrl': data['imageUrl'] as String?,
+                'photo': data['photo'] as String?,
                 'categories':
                     data['categories'] != null
                         ? List<String>.from(data['categories'] as List)
@@ -532,7 +532,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
             child: ArticleCard(
               title: article['title'],
               author: article['author'],
-              imageUrl: article['imageUrl'],
+              photo: article['photo'],
               categories: article['categories'],
               url: article['url'],
               date: article['date'],
@@ -600,7 +600,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
                                 return ArticleCard(
                                   title: article['title'],
                                   author: article['author'],
-                                  imageUrl: article['imageUrl'],
+                                  photo: article['photo'],
                                   categories: article['categories'],
                                   url: article['url'],
                                   date: article['date'],
