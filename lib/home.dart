@@ -6,6 +6,7 @@ import 'theme.dart';
 import 'chat.dart';
 // import 'locationservice.dart';
 import 'countrycodeservice.dart';
+import 'dart:io' show Platform;
 
 // changed this class to include states
 class MyHomePage extends StatefulWidget {
@@ -68,7 +69,18 @@ class _MyHomePageState extends State<MyHomePage> {
     if (await canLaunchUrl(whatsappUri)) {
       await launchUrl(whatsappUri);
     } else {
-      debugPrint('Could not launch WhatsApp. Make sure WhatsApp is installed.');
+      // Fallback to Play Store (Android) or App Store (iOS)
+      final storeUri = Platform.isAndroid
+        ? Uri.parse("market://details?id=com.whatsapp")
+        : Uri.parse("https://apps.apple.com/app/whatsapp-messenger/id310633997");
+
+      if (await canLaunchUrl(storeUri)) {
+        await launchUrl(storeUri, mode: LaunchMode.externalApplication);
+      } else {
+        // As a last‐resort fallback, open the web link
+        final webUri = Uri.parse("https://wa.me/$phoneNumber");
+        await launchUrl(webUri, mode: LaunchMode.externalApplication);
+      }
     }
   }
 
