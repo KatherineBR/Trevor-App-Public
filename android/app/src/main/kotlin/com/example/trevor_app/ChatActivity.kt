@@ -15,6 +15,7 @@ class ChatActivity : AppCompatActivity() {
     private var chatController: ChatController? = null
     private var deploymentId: String? = null
     private var domain: String? = null
+    private var fcmToken: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +24,7 @@ class ChatActivity : AppCompatActivity() {
         // Get deployment info from intent
         deploymentId = intent.getStringExtra("deploymentId")
         domain = intent.getStringExtra("domain")
+        fcmToken = intent.getStringExtra("fcmToken")
 
         if (deploymentId == null || domain == null) {
             Log.e(TAG, "Missing deployment information")
@@ -53,6 +55,11 @@ class ChatActivity : AppCompatActivity() {
                 }
             }
         })
+
+        if(fcmToken != null){
+            print("setting token")
+            MessengerAccount
+        }
 
         // Set up back button
         val backButton: ImageButton = findViewById(R.id.btn_back)

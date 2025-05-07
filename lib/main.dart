@@ -38,13 +38,14 @@ void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isDefaultTheme = prefs.getBool('isDefaultTheme') ?? true;
   bool isTrevorIcon = prefs.getBool('isTrevorIcon') ?? false;
-  runApp(MyApp(initIsDefaultTheme: isDefaultTheme, initIsTrevorIcon: isTrevorIcon));
+  runApp(MyApp(initIsDefaultTheme: isDefaultTheme, initIsTrevorIcon: isTrevorIcon, fcmToken: fcmToken,));
 }
 
 class MyApp extends StatefulWidget {
   final bool initIsDefaultTheme;
   final bool initIsTrevorIcon;
-  const MyApp({super.key, this.initIsDefaultTheme = true, this.initIsTrevorIcon = false});
+  final String? fcmToken;
+  const MyApp({super.key, this.initIsDefaultTheme = true, this.initIsTrevorIcon = false, this.fcmToken});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -53,6 +54,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   late bool isDefaultTheme = widget.initIsDefaultTheme;
   late bool isTrevorIcon = widget.initIsTrevorIcon;
+  late String? fcmToken = widget.fcmToken;
   bool isLoading = true;
   // Initialize the theme state with the value passed from the constructor
   // This makes sure the app starts with the saved theme from SharedPreferences
@@ -105,6 +107,7 @@ class _MyAppState extends State<MyApp> {
       home: HomeScreen(
         isDefaultTheme: isDefaultTheme,
         toggleTheme: _toggleTheme,
+        fcmToken: fcmToken,
       ),
     );
   }
@@ -113,11 +116,13 @@ class _MyAppState extends State<MyApp> {
 class HomeScreen extends StatefulWidget {
   final bool isDefaultTheme;
   final VoidCallback toggleTheme;
+  final String? fcmToken;
 
   const HomeScreen({
       super.key,
       required this.isDefaultTheme,
-      required this.toggleTheme
+      required this.toggleTheme,
+      required this.fcmToken
     });
 
   @override
@@ -126,13 +131,24 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0; // Track the selected tab
+  late String? fcmToken = widget.fcmToken;
+  late List<Widget> _pages = [];
 
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      MyHomePage(fcmToken: fcmToken),        // Home page from home.dart
+      ResourcesPage(),  // Meditation page from resources.dart
+      FeedbackApp(),    // Feedback page from feedback.dart
+    ];
+  }
   // List of pages to display based on the selected index
-  final List<Widget> _pages = [
-    MyHomePage(),        // Home page from home.dart
-    ResourcesPage(),  // Meditation page from resources.dart
-    FeedbackApp(),    // Feedback page from feedback.dart
-  ];
+  // final List<Widget> _pages = [
+  //   MyHomePage(fcmToken: fcmToken),        // Home page from home.dart
+  //   ResourcesPage(),  // Meditation page from resources.dart
+  //   FeedbackApp(),    // Feedback page from feedback.dart
+  // ];
 
   // This function is called when a bottom nav item is selected
   void _onItemTapped(int index) {
