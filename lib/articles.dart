@@ -13,7 +13,7 @@ class ArticleCard extends StatelessWidget {
   final String? photo;
   final List<String>? categories;
   final String url;
-  final DateTime date;
+  final String date;
   final String category;
 
   const ArticleCard({
@@ -74,7 +74,7 @@ class ArticleCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      DateFormat('MMMM d, yyyy').format(date),
+                      date,
                       style: TextStyle(color: Colors.grey[600], fontSize: 14),
                     ),
                     const SizedBox(height: 4),
@@ -283,7 +283,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
                         ? List<String>.from(data['categories'] as List)
                         : null,
                 'url': data['url'] as String,
-                'date': (data['date'] as Timestamp).toDate(),
+                'date': (data['date'] as String),
               };
             }).toList();
         filteredArticles = articles; // Initialize filtered articles

@@ -151,9 +151,9 @@ class _ResourcesPageState extends State<ResourcesPage> {
               final data = doc.data();
               return {
                 'title': data['title'] as String,
-                'imageUrl': data['imageUrl'] as String?,
+                'photo': data['photo'] as String?,
                 'url': data['url'] as String,
-                'date': (data['date'] as Timestamp).toDate(),
+                'date': (data['date'] as String),
                 'topic': data['topic'] as String?,
               };
             }).toList();
@@ -234,7 +234,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
                   child: ArticleCard(
                     title: article['title'],
                     author: null,
-                    photo: article['imageUrl'],
+                    photo: article['photo'],
                     categories: null,
                     url: article['url'],
                     date: article['date'],
