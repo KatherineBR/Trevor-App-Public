@@ -37,5 +37,6 @@
   "contactUs" : "Contact us",
   "theme" : "Theme",
   "icon" : "Icon",
-  "resourcePage" : "resourcesPage"
+  "resourcePage" : "resourcesPage",
+  "whatsapp" : "Text Us on WhatsApp"
 }

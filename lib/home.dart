@@ -128,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               ? openWhatsApp('+525592253337')
                               : sendSMS('sms:+18664887386'),
                   style: AppTheme.getLargeButtonStyle(context, colorIndex: 1),
-                  child: Text(localizations.text),
+                  child: Text(_countryCode == 'MX' ? localizations.whatsapp : localizations.text)
                 ),
               ),
               const SizedBox(height: 25),

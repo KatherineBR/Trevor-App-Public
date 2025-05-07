@@ -1,7 +1,8 @@
 {
   "appTitle": "Página de inicio de demostración de Flutter",
   "call": "Llámanos",
-  "text": "Contáctanos por WhatsApp",
+  "text": "Envíanos",
+  "whatsapp": "Envíanos WhatsApp",
   "chat": "Búscanos para chatear",
   "chatURL": "http://chat.trvr.mx/",
   "home" : "Hogar",
@@ -28,6 +29,7 @@
   "research": "Resúmenes de Investigación",
   "resarchDescription": "Explora los estudios de investigación más recientes.",
   "breathing": "Ejercicios de Respiración",
+  "breathingDescription": "Aprenda a manejar el estrés con técnicas de respiración",
   "blogs": "Blogs",
   "blogsDescription": "Lee historias inspiradoras y actualizaciones",
   "communication": "Comunicación",
