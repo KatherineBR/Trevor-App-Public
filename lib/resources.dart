@@ -63,6 +63,7 @@ class ResourceCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               Text(
@@ -70,6 +71,7 @@ class ResourceCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.normal,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],

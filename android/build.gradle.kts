@@ -6,7 +6,7 @@ allprojects {
    repositories {
        google()
        mavenCentral()
-       maven { url = uri("https://genesysdx.jfrog.io/artifactory/genesys-cloud-android.dev/") }
+       //maven { url = uri("https://genesysdx.jfrog.io/artifactory/genesys-cloud-android.dev/") }
        maven { url = uri("https://genesysdx.jfrog.io/artifactory/genesys-cloud-android.prod/") }
 
    }
