@@ -4,7 +4,7 @@ This is a Flutter project created by T4SG S25 for The Trevor Project.
 
 ## Building the App
 
-1. Setup Flutter for your desired target device (can add more later): [https://docs.flutter.dev/get-started/install].
+1. Setup Flutter for your desired target device (can add more later): https://docs.flutter.dev/get-started/install.
 2. Setup your IDE for Flutter (optional, if not used to install SDK) 
    a. For VSCode:
       i. install the Flutter by Dart Code extension
