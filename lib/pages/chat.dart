@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'countrycodeservice.dart';
+import '../services/countrycodeservice.dart';
 
 // Class that invokes a method on native side since flutter can't directly do this
 class Chat {

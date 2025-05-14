@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'home.dart';
-import 'feedback.dart';
-import 'locationservice.dart';
-import 'resources.dart';
+import 'pages/home.dart';
+import 'pages/feedback.dart';
+import 'services/locationservice.dart';
+import 'pages/resources.dart';
 import 'theme.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import "settingsdrawer.dart";
+import 'services/firebase_options.dart';
+import "pages/settingsdrawer.dart";
 import "package:firebase_messaging/firebase_messaging.dart";
 import "package:firebase_analytics/firebase_analytics.dart";
-import "messaging.dart";
+import "services/notifications.dart";
 import 'package:shared_preferences/shared_preferences.dart';
 import 'switch_icon.dart';
-import 'countrycodeservice.dart';
+import 'services/countrycodeservice.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

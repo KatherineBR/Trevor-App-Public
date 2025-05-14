@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'webview_controller.dart';
-import 'theme.dart';
+import '../theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 

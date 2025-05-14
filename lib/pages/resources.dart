@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'webview_controller.dart';
-import 'theme.dart';
-import 'locationservice.dart';
+import '../theme.dart';
+import '../services/locationservice.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'articles.dart';
 
@@ -201,11 +201,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
       return Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    if(locale.languageCode == 'es' && !spanishArticles.isNotEmpty){
-      //TODO: put something that says no resources found
-    }
-
-    if (locale.languageCode == 'es' && spanishArticles.isNotEmpty) {
+    if (locale.languageCode == 'es') {
       // Group Spanish articles by topic
       final Map<String, List<Map<String, dynamic>>> articlesByTopic = {};
       for (final article in spanishArticles) {
@@ -223,6 +219,13 @@ class _ResourcesPageState extends State<ResourcesPage> {
           children: [
             Text('Recursos en Español', style: theme.textTheme.displayLarge),
             const SizedBox(height: 16),
+            Text(
+              localizations.resourcesDescription,
+              style: theme.textTheme.bodyLarge,
+            ),
+            const SizedBox(height: 25),
+            if (spanishArticles.isEmpty)
+              Center(child: Text('No hay artículos disponibles en español.')),
             for (final topic in sortedTopics) ...[
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12.0),
