@@ -110,7 +110,7 @@ class _MyWidgetState extends State<FeedbackApp> {
 
     return Scaffold(
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 40),
+        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
         child: Column(
           children: <Widget>[
             Text(localizations.feedback, style: theme.textTheme.displayLarge),
