@@ -15,25 +15,37 @@ import "services/notifications.dart";
 import 'package:shared_preferences/shared_preferences.dart';
 import 'switch_icon.dart';
 import 'services/countrycodeservice.dart';
+import 'dart:io';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  
-  final fcmToken = await FirebaseMessaging.instance.getToken();
-  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  print("fcmToken is $fcmToken");
 
-  // First: request location permission
-  String country = await LocationService.getUserCountry(); //CALLS A PERMISSION
-
-  // Then: request notification permission
+  //request notification permission
   Messaging messageHandler = Messaging();
   await messageHandler.mainMessaging(); //CALLS A PERMISSION
+
+  //request location permission
+  String country = await LocationService.getUserCountry(); //CALLS A PERMISSION
   CountryCodeService countryCodeService = CountryCodeService();
   await countryCodeService.initialize();
+
+  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
+  try {
+    if(Platform.isIOS){
+      // Wait for APNS token
+        String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+        print("APNS Token: $apnsToken");
+    }
+
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    print("fcmToken is $fcmToken");
+  } catch (e){
+    print("Error getting FCM/APNS token: $e");
+  }
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isDefaultTheme = prefs.getBool('isDefaultTheme') ?? true;
@@ -70,8 +82,10 @@ class _MyAppState extends State<MyApp> {
   void _toggleTheme() {
       setState(() {
         isDefaultTheme = !isDefaultTheme;
-        isTrevorIcon = !isTrevorIcon;
-        AppIconSwitcher.switchAppIcon(isTrevorIcon);
+        if(Platform.isAndroid){
+          isTrevorIcon = !isTrevorIcon;
+          AppIconSwitcher.switchAppIcon(isTrevorIcon);
+        }
         _saveThemePreference();
       });
   }

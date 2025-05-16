@@ -108,12 +108,23 @@ class _MyHomePageState extends State<MyHomePage> {
                 height: 80,
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed:
-                      _loading
-                          ? null
-                          : () async {
-                            await Chat.getChat();
-                          },
+                  onPressed: _loading ? null : () async {
+                    if(Platform.isIOS){
+                      if(_countryCode == 'MX'){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => WebViewApp(url: 'http://chat.trvr.mx/')),
+                        );
+                      } else { //'US' default
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => WebViewApp(url: 'http://chat.trvr.org/')),
+                        );
+                      }
+                    } else { //android default
+                        Chat.getChat();
+                    }
+                  },
                   style: AppTheme.getLargeButtonStyle(context, colorIndex: 1),
                   child: Text(localizations.chat),
                 ),

@@ -202,17 +202,6 @@ class _ResourcesPageState extends State<ResourcesPage> {
     }
 
     if (locale.languageCode == 'es') {
-      // Group Spanish articles by topic
-      final Map<String, List<Map<String, dynamic>>> articlesByTopic = {};
-      for (final article in spanishArticles) {
-        final topic = article['topic'] ?? 'Otros';
-        if (!articlesByTopic.containsKey(topic)) {
-          articlesByTopic[topic] = [];
-        }
-        articlesByTopic[topic]!.add(article);
-      }
-      final sortedTopics = articlesByTopic.keys.toList()..sort();
-
       return Scaffold(
         body: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
@@ -226,26 +215,19 @@ class _ResourcesPageState extends State<ResourcesPage> {
             const SizedBox(height: 25),
             if (spanishArticles.isEmpty)
               Center(child: Text('No hay artículos disponibles en español.')),
-            for (final topic in sortedTopics) ...[
+            for (final article in spanishArticles)
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12.0),
-                child: Text(topic, style: theme.textTheme.headlineSmall),
-              ),
-              ...articlesByTopic[topic]!.map(
-                (article) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
-                  child: ArticleCard(
-                    title: article['title'],
-                    author: null,
-                    photo: article['photo'],
-                    categories: null,
-                    url: article['url'],
-                    date: article['date'],
-                    category: 'SpanishResources',
-                  ),
+                padding: const EdgeInsets.only(bottom: 12.0),
+                child: ArticleCard(
+                  title: article['title'],
+                  author: null,
+                  photo: article['photo'],
+                  categories: null,
+                  url: article['url'],
+                  date: article['date'],
+                  category: 'SpanishResources',
                 ),
               ),
-            ],
           ],
         ),
       );

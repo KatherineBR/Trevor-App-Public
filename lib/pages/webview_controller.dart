@@ -48,12 +48,11 @@ class _WebViewAppState extends State<WebViewApp> {
       appBar: Platform.isIOS // Only show a leave-webview bar if on iOS
         ? AppBar(
             leading: IconButton(
-              icon: Icon(Icons.close),
+              icon: Icon(Icons.arrow_back_ios_new),
               onPressed: () {
                 Navigator.of(context).pop(); // Exit web view controller
               },
             ),
-            title: Text('WebView'),
           )
         : null,
       body: WebViewWidget(
