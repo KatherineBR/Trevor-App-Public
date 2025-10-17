@@ -1,6 +1,6 @@
 # trevor-app
 
-This is a Flutter project created by T4SG S25 for The Trevor Project.
+This is a Flutter project created by Harvard Computer Society's Tech for Social Good in Spring 2025 for The Trevor Project.
 
 ## Building the App
 
